@@ -24,7 +24,7 @@ body.gv-page--brunetta {
 .gv-page--brunetta .d2-skip { position: fixed; top: 12px; left: 12px; z-index: 100; padding: 12px 20px; background: var(--gv-black); color: var(--gv-white); transform: translateY(-180%); }
 .gv-page--brunetta .d2-skip:focus { transform: none; }
 .gv-page--brunetta .gv-nav-wrap { inset: 0 0 auto; }
-.gv-page--brunetta .gv-nav { min-height: 88px; padding: 16px clamp(20px, 3vw, 56px); border-radius: 0; border-bottom: 1px solid var(--d2-line); background: var(--gv-white); backdrop-filter: none; overflow: visible; }
+.gv-page--brunetta .gv-nav { min-height: 88px; padding: max(16px, env(safe-area-inset-top)) max(clamp(20px, 3vw, 56px), env(safe-area-inset-right)) 16px max(clamp(20px, 3vw, 56px), env(safe-area-inset-left)); border-radius: 0; border-bottom: 1px solid var(--d2-line); background: var(--gv-white); backdrop-filter: none; overflow: visible; }
 .gv-page--brunetta .gv-logo { font-size: 30px; display: inline-flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
 .gv-page--brunetta .gv-logo small { font-family: Afacad, sans-serif; font-size: 10px; font-weight: 500; letter-spacing: .25em; text-transform: uppercase; }
 .gv-page--brunetta .gv-nav__links { gap: clamp(16px, 2vw, 32px); }
@@ -152,4 +152,7 @@ body.gv-page--brunetta {
   .gv-page--brunetta .d2-visit address { font-size: 22px; }
 }
 @media (max-width: 359px) { .gv-page--brunetta .gv-mobile-nav summary > span { display: none; } }
+
+/* Keep the menu's floating order button clear of the fixed "design preview" bar. */
+.gv-page--brunetta .d2menu__pill { bottom: calc(3.25rem + env(safe-area-inset-bottom) + 0.75rem); }
 @media (prefers-reduced-motion: reduce) { .gv-page--brunetta *, .gv-page--brunetta *::before, .gv-page--brunetta *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }

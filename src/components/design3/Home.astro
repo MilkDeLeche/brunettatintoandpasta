@@ -44,7 +44,7 @@ const marqueeText = `${c.footer.marquee} · `;
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>{isTemplate ? "Golden Child — fresh dog food" : "Brunetta Tinto & Pasta — Authentic Italian Fine Dining"}</title>
   <meta name="robots" content={isTemplate ? "noindex" : "index,follow"} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -66,9 +66,28 @@ const marqueeText = `${c.footer.marquee} · `;
         <div class="header-actions">
           <a class="btn btn-black text-body-sm" href={c.navCta.href}>{c.navCta.label}</a>
         </div>
+        <details class="gc-mobile-nav">
+          <summary aria-label="Open menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </summary>
+          <nav aria-label="Mobile">
+            <a href={c.home}>Home</a>
+            {c.navLeft.map((l) => <a href={l.href}>{l.label}</a>)}
+            <a href={c.navCta.href} target="_blank" rel="noopener">{c.navCta.label}</a>
+          </nav>
+        </details>
       </div>
     </div>
   </header>
+  <script>
+    const mob = document.querySelector<HTMLDetailsElement>(".gc-mobile-nav");
+    mob?.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") { mob.open = false; mob.querySelector("summary")?.focus(); }
+    });
+    document.addEventListener("click", (e) => {
+      if (mob?.open && e.target instanceof Node && !mob.contains(e.target)) mob.open = false;
+    });
+  </script>
 
   <main>
     <!-- HERO (light) -->

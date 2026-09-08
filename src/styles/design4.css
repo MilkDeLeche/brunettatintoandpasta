@@ -115,8 +115,8 @@
 .d4 .pc-btn--ghost { background: rgba(255, 255, 255, 0.15); color: #fff; border-color: rgba(255, 255, 255, 0.5); }
 
 /* header */
-.d4 .pc-header { position: sticky; top: 0; z-index: 50; background: var(--pc-paper); border-bottom: 1px solid var(--pc-line); }
-.d4 .pc-header__row { max-width: var(--pc-container); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem var(--pc-gutter); }
+.d4 .pc-header { position: sticky; top: 0; z-index: 50; background: var(--pc-paper); border-bottom: 1px solid var(--pc-line); padding-top: env(safe-area-inset-top); }
+.d4 .pc-header__row { max-width: var(--pc-container); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem max(var(--pc-gutter), env(safe-area-inset-right)) 0.85rem max(var(--pc-gutter), env(safe-area-inset-left)); }
 .d4 .pc-logo { font-family: var(--pc-serif); font-weight: 500; font-size: 1.4rem; }
 .d4 .pc-header__nav { display: none; gap: 1.75rem; font-size: 0.95rem; }
 .d4 .pc-header__cta { display: flex; align-items: center; gap: 0.6rem; }
@@ -136,10 +136,10 @@
 }
 .d4 .pc-mobile-nav summary::-webkit-details-marker { display: none; }
 .d4 .pc-mobile-nav nav {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.6rem);
-  min-width: 12rem;
+  position: fixed;
+  right: max(var(--pc-gutter), env(safe-area-inset-right));
+  top: calc(env(safe-area-inset-top) + 3.9rem);
+  width: min(15rem, calc(100vw - 2 * var(--pc-gutter)));
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
@@ -147,12 +147,13 @@
   border-radius: var(--pc-radius);
   background: var(--pc-paper);
   border: 1px solid var(--pc-line);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
 }
-.d4 .pc-mobile-nav nav a { padding: 0.7rem 0.75rem; border-radius: 0.6rem; font-size: 0.95rem; }
+.d4 .pc-mobile-nav nav a { padding: 0.75rem; border-radius: 0.6rem; font-size: 0.95rem; }
 .d4 .pc-mobile-nav nav a:hover { background: rgba(0, 0, 0, 0.05); }
 @media (min-width: 900px) { .d4 .pc-mobile-nav { display: none; } }
-@media (max-width: 560px) { .d4 .pc-header__cta .pc-btn--outline { display: none; } }
+/* On phones the CTAs live inside the menu — keep the bar to logo + toggle. */
+@media (max-width: 899px) { .d4 .pc-header__cta { display: none; } }
 
 /* ---- sub-page building blocks ---- */
 .d4 .pc-page-head { border-bottom: 1px solid var(--pc-line); }
@@ -177,7 +178,7 @@
 /* menu */
 .d4 .pc-menu-chips {
   position: sticky;
-  top: 3.75rem;
+  top: calc(3.5rem + env(safe-area-inset-top));
   z-index: 20;
   display: flex;
   gap: 0.5rem;

@@ -136,12 +136,19 @@
   background: rgba(255, 255, 255, 0.14);
   color: #fff;
   border-color: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
   backdrop-filter: blur(10px) saturate(180%);
 }
 .d3 .btn-glass:hover { background: rgba(255, 255, 255, 0.26); }
 
 /* ---- header (floating glass pill) ---- */
-.d3 .gc-header { position: fixed; inset-inline: 0; top: 0; z-index: 50; padding: 1.25rem 1rem; }
+.d3 .gc-header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+  padding: max(1.25rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 1.25rem max(1rem, env(safe-area-inset-left));
+}
 .d3 .header-panel {
   position: relative;
   max-width: var(--gc-container);
@@ -154,6 +161,7 @@
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.42);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
   backdrop-filter: blur(10px) saturate(180%);
 }
 .d3 .header-row {
@@ -196,18 +204,21 @@
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
 .d3 .gc-mobile-nav summary::-webkit-details-marker { display: none; }
+/* Fixed (not absolute) so it isn't clipped by the header pill's overflow:hidden. */
 .d3 .gc-mobile-nav nav {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.6rem);
-  min-width: 12rem;
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  top: calc(env(safe-area-inset-top) + 4.5rem);
+  width: min(16rem, calc(100vw - 2rem));
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.6rem;
   border-radius: 1rem;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.92);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
   backdrop-filter: blur(10px) saturate(180%);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
 }
 .d3 .gc-mobile-nav nav a {
   color: #fff;
@@ -244,7 +255,7 @@
 /* menu */
 .d3 .menu-chips {
   position: sticky;
-  top: 0;
+  top: calc(env(safe-area-inset-top) + 4.75rem);
   z-index: 20;
   display: flex;
   gap: 0.5rem;
@@ -252,6 +263,7 @@
   scrollbar-width: none;
   padding: 0.85rem var(--gc-gutter);
   background: rgba(245, 245, 245, 0.95);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }

@@ -328,8 +328,8 @@
 }
 
 /* Brunetta rebrand: retain the reference palette and editorial scale. */
-:root { --brunetta-nav-height: 88px; }
-.brunetta-nav { min-height: var(--brunetta-nav-height); padding: 12px clamp(20px, 3vw, 56px); display: flex; align-items: center; gap: 28px; justify-content: space-between; }
+:root { --brunetta-nav-height: calc(88px + env(safe-area-inset-top)); }
+.brunetta-nav { min-height: var(--brunetta-nav-height); padding: max(12px, env(safe-area-inset-top)) max(clamp(20px, 3vw, 56px), env(safe-area-inset-right)) 12px max(clamp(20px, 3vw, 56px), env(safe-area-inset-left)); display: flex; align-items: center; gap: 28px; justify-content: space-between; }
 .brunetta-wordmark { display: flex; flex-direction: column; align-items: center; gap: 7px; color: var(--biege); flex-shrink: 0; }
 .brunetta-wordmark > span { font-family: var(--font-display); font-size: 30px; letter-spacing: -.045em; }
 .brunetta-wordmark small { font-size: 10px; text-transform: uppercase; letter-spacing: .25em; }
@@ -381,8 +381,8 @@
   .brunetta-nav__reserve { margin-left: auto; }
 }
 @media (max-width: 767px) {
-  :root { --brunetta-nav-height: 80px; }
-  .brunetta-nav { gap: 12px; padding: 12px 20px; }
+  :root { --brunetta-nav-height: calc(80px + env(safe-area-inset-top)); }
+  .brunetta-nav { gap: 12px; padding: max(12px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 12px max(20px, env(safe-area-inset-left)); }
   .brunetta-wordmark > span { font-size: 27px; }
   .brunetta-nav__reserve { display: none; }
   .brunetta-hero { min-height: 760px; max-height: none; height: 100svh; }
