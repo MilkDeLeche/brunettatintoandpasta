@@ -101,11 +101,11 @@ const blogPhotos = ["DSC05501", "DSC09728", "DSC01349", "DSC09509"];
     <p class="gv-footer__copy">&copy; {new Date().getFullYear()} {business.name}. <a href="/design-1/privacy">Privacy</a> · <a href="/">All concepts</a></p>
   </footer>
   <script>
+    import { wireMobileNav } from "../../scripts/mobile-nav";
+    wireMobileNav(".gv-mobile-nav", { closeOnLinkClick: true });
+
     const mobileNav = document.querySelector<HTMLDetailsElement>(".gv-mobile-nav")!;
-    const summary = mobileNav.querySelector("summary")!;
-    const closeNav = () => { mobileNav.open = false; };
     mobileNav.querySelectorAll<HTMLAnchorElement>("a").forEach(link => link.addEventListener("click", event => {
-      closeNav();
       if (link.hash) {
         event.preventDefault();
         window.location.hash = link.hash;
@@ -113,10 +113,6 @@ const blogPhotos = ["DSC05501", "DSC09728", "DSC01349", "DSC09509"];
         if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
       }
     }));
-    mobileNav.addEventListener("keydown", event => { if (event.key === "Escape") { closeNav(); summary.focus(); } });
-    document.addEventListener("click", event => { if (event.target instanceof Node && !mobileNav.contains(event.target)) closeNav(); });
-    mobileNav.addEventListener("focusout", () => { requestAnimationFrame(() => { if (!mobileNav.contains(document.activeElement)) closeNav(); }); });
-    const desktop = matchMedia("(min-width: 901px)");
-    desktop.addEventListener("change", event => { if (event.matches) closeNav(); });
+    matchMedia("(min-width: 901px)").addEventListener("change", event => { if (event.matches) mobileNav.open = false; });
   </script>
 </GustoLayout>

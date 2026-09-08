@@ -80,13 +80,8 @@ const marqueeText = `${c.footer.marquee} · `;
     </div>
   </header>
   <script>
-    const mob = document.querySelector<HTMLDetailsElement>(".gc-mobile-nav");
-    mob?.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") { mob.open = false; mob.querySelector("summary")?.focus(); }
-    });
-    document.addEventListener("click", (e) => {
-      if (mob?.open && e.target instanceof Node && !mob.contains(e.target)) mob.open = false;
-    });
+    import { wireMobileNav } from "../../scripts/mobile-nav";
+    wireMobileNav(".gc-mobile-nav", { closeOnLinkClick: true });
   </script>
 
   <main>

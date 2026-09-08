@@ -122,8 +122,10 @@
 .d4 .pc-header__cta { display: flex; align-items: center; gap: 0.6rem; }
 @media (min-width: 900px) { .d4 .pc-header__nav { display: flex; } }
 
-/* mobile nav (added for the multi-page sub-routes) */
-.d4 .pc-mobile-nav { position: relative; }
+/* mobile nav — full-screen drawer, slides in from the right.
+   The <details> holds only the toggle; the panel is a following sibling so it
+   is never subject to the UA "hide closed <details> content" rule. */
+.d4 .pc-mobile-nav { position: static; }
 .d4 .pc-mobile-nav summary {
   list-style: none;
   display: grid;
@@ -132,28 +134,109 @@
   height: 2.75rem;
   border-radius: var(--pc-pill);
   border: 1px solid var(--pc-line);
+  color: var(--pc-ink);
   cursor: pointer;
+  position: relative;
+  z-index: 80;
 }
 .d4 .pc-mobile-nav summary::-webkit-details-marker { display: none; }
-.d4 .pc-mobile-nav nav {
+
+.d4 .pc-burger { position: relative; width: 1.15rem; height: 0.72rem; }
+.d4 .pc-burger span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.3s ease, opacity 0.15s ease;
+}
+.d4 .pc-burger span:nth-child(1) { top: 0; }
+.d4 .pc-burger span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.d4 .pc-burger span:nth-child(3) { bottom: 0; }
+.d4 .pc-mobile-nav[open] .pc-burger span:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
+.d4 .pc-mobile-nav[open] .pc-burger span:nth-child(2) { opacity: 0; }
+.d4 .pc-mobile-nav[open] .pc-burger span:nth-child(3) { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
+
+.d4 .pc-drawer {
   position: fixed;
-  right: max(var(--pc-gutter), env(safe-area-inset-right));
-  top: calc(env(safe-area-inset-top) + 3.9rem);
-  width: min(15rem, calc(100vw - 2 * var(--pc-gutter)));
+  inset: 0;
+  z-index: 70;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
-  gap: 0.15rem;
-  border-radius: var(--pc-radius);
+  padding:
+    max(1.4rem, env(safe-area-inset-top))
+    max(1.75rem, env(safe-area-inset-right))
+    max(1.75rem, env(safe-area-inset-bottom))
+    max(1.75rem, env(safe-area-inset-left));
   background: var(--pc-paper);
-  border: 1px solid var(--pc-line);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+  transform: translateX(100%);
+  visibility: hidden;
+  overflow-y: auto;
+  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s 0.42s;
 }
-.d4 .pc-mobile-nav nav a { padding: 0.75rem; border-radius: 0.6rem; font-size: 0.95rem; }
-.d4 .pc-mobile-nav nav a:hover { background: rgba(0, 0, 0, 0.05); }
-@media (min-width: 900px) { .d4 .pc-mobile-nav { display: none; } }
-/* On phones the CTAs live inside the menu — keep the bar to logo + toggle. */
+.d4 .pc-mobile-nav[open] ~ .pc-drawer {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s 0s;
+}
+/* Lift the header's stacking context above the fixed preview bar while open. */
+.d4 .pc-header:has(.pc-mobile-nav[open]) { z-index: 100; }
+.d4 .pc-drawer__head { display: flex; align-items: center; justify-content: space-between; }
+.d4 .pc-drawer__head .pc-logo { font-size: 1.3rem; }
+.d4 .pc-drawer__x {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--pc-line);
+  border-radius: var(--pc-pill);
+  background: none;
+  color: var(--pc-ink);
+  cursor: pointer;
+}
+.d4 .pc-drawer__links {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2.25rem;
+  border-top: 1px solid var(--pc-line);
+}
+.d4 .pc-drawer__links a {
+  font-family: var(--pc-serif);
+  font-weight: 500;
+  font-size: clamp(1.9rem, 8vw, 2.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--pc-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.d4 .pc-drawer__links a::after {
+  content: "\2192";
+  font-family: var(--pc-sans);
+  font-size: 1.05rem;
+  color: var(--pc-orange);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.d4 .pc-drawer__links a:hover::after,
+.d4 .pc-drawer__links a:focus-visible::after { opacity: 1; transform: translateX(0); }
+.d4 .pc-drawer__cta { margin-top: auto; padding-top: 2rem; display: grid; gap: 0.7rem; }
+.d4 .pc-drawer__cta .pc-btn { width: 100%; justify-content: center; height: 3.25rem; }
+
+@media (min-width: 900px) {
+  .d4 .pc-mobile-nav { display: none; }
+  .d4 .pc-drawer { display: none; }
+}
+/* On phones the CTAs live inside the drawer — keep the bar to logo + toggle. */
 @media (max-width: 899px) { .d4 .pc-header__cta { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .d4 .pc-drawer { transition: visibility 0s; }
+  .d4 .pc-burger span { transition: none; }
+}
 
 /* ---- sub-page building blocks ---- */
 .d4 .pc-page-head { border-bottom: 1px solid var(--pc-line); }

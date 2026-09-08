@@ -49,14 +49,25 @@ const year = new Date().getFullYear();
       </div>
       <details class="pc-mobile-nav">
         <summary aria-label="Open menu">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <span class="pc-burger" aria-hidden="true"><span></span><span></span><span></span></span>
         </summary>
-        <nav aria-label="Mobile">
-          <a href={c.home}>Home</a>
-          {c.nav.map((l) => <a href={l.href}>{l.label}</a>)}
-          <a href={c.ctaPrimary.href} target="_blank" rel="noopener">{c.ctaPrimary.label}</a>
-        </nav>
       </details>
+      <div class="pc-drawer" id="pc-drawer">
+        <div class="pc-drawer__head">
+          <span class="pc-logo">{c.name}</span>
+          <button type="button" class="pc-drawer__x" data-close aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <nav class="pc-drawer__links" aria-label="Mobile">
+          <a href={c.home}>Home</a>
+          {c.nav.map((l) => <a href={l.href} aria-current={path === l.href ? "page" : undefined}>{l.label}</a>)}
+        </nav>
+        <div class="pc-drawer__cta">
+          <a class="pc-btn pc-btn--solid" href={c.ctaSecondary.href}>{c.ctaSecondary.label}</a>
+          <a class="pc-btn pc-btn--outline" href={c.ctaPrimary.href} target="_blank" rel="noopener">{c.ctaPrimary.label}</a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -95,13 +106,8 @@ const year = new Date().getFullYear();
 </div>
 
 <script>
-  const mob = document.querySelector<HTMLDetailsElement>(".pc-mobile-nav");
-  mob?.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") { mob.open = false; mob.querySelector("summary")?.focus(); }
-  });
-  document.addEventListener("click", (e) => {
-    if (mob?.open && e.target instanceof Node && !mob.contains(e.target)) mob.open = false;
-  });
+  import { wireMobileNav } from "../scripts/mobile-nav";
+  wireMobileNav(".pc-mobile-nav", { panelSelector: "#pc-drawer", closeOnLinkClick: true, lockScroll: true });
 </script>
 </body>
 </html>

@@ -23,11 +23,6 @@ const { pathname } = Astro.url;
   </div>
 </header>
 <script>
-  const mobile = document.querySelector<HTMLDetailsElement>(".brunetta-nav__mobile");
-  mobile?.addEventListener("keydown", event => {
-    if (event.key === "Escape") { mobile.open = false; mobile.querySelector("summary")?.focus(); }
-  });
-  document.addEventListener("click", event => {
-    if (mobile?.open && event.target instanceof Node && !mobile.contains(event.target)) mobile.open = false;
-  });
+  import { wireMobileNav } from "../scripts/mobile-nav";
+  wireMobileNav(".brunetta-nav__mobile", { closeOnLinkClick: true });
 </script>
