@@ -31,7 +31,9 @@ if (SANITY_PROJECT_ID) {
 }
 
 export default defineConfig({
-  site: "https://brunettatintoandpasta.com",
+  // Current deploy URL. Switch to the final domain (https://brunettatintoandpasta.com)
+  // at launch — this drives canonical + og:url on every page.
+  site: "https://brunettatintoandpasta-ev25.vercel.app",
   adapter: vercel(),
   integrations,
   vite: { plugins: [tailwindcss()] },
