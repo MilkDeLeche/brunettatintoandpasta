@@ -1,0 +1,65 @@
+---
+import Design4Layout from "../../layouts/Design4Layout.astro";
+import { business, location, hours, contact } from "../../data/brunetta";
+
+const address = `${business.name}, ${location.street}, ${location.city}, ${location.state} ${location.zip}`;
+const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+  `${location.street}, ${location.city}, ${location.state} ${location.zip}`
+)}`;
+const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+const RESERVE = "https://www.google.com/maps/reserve/v/dine/c/5H5kKRje0fU";
+---
+
+<Design4Layout
+  title={`Location & Hours — ${business.name}`}
+  description={`Find ${business.name} at ${location.street}, ${location.city}, ${location.state} ${location.zip}.`}
+  path="/design-4/location"
+>
+  <section class="pc-page-head">
+    <div class="pc-wrap">
+      <p class="pc-eyebrow">Visit Us</p>
+      <h1 class="pc-title">Right in the heart of <em>McAllen</em></h1>
+    </div>
+  </section>
+
+  <section class="pc-block">
+    <div class="pc-wrap pc-feature">
+      <div class="pc-feature__copy">
+        <address style="font-style:normal">
+          <p class="pc-sub">{location.street}</p>
+          <p class="pc-sub">{location.city}, {location.state} {location.zip}</p>
+          <p class="pc-muted" style="margin-top:0.75rem">{location.landmark}</p>
+        </address>
+
+        <div>
+          <p class="pc-eyebrow">Hours</p>
+          <ul style="list-style:none;margin:0.75rem 0 0;padding:0;">
+            {hours.displayGrouped.map((row) => (
+              <li style="display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--pc-line);padding:0.6rem 0;">
+                <span class="pc-muted">{row.label}</span>
+                <span>{row.value}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="pc-muted" style="margin-top:0.6rem;font-size:0.9rem">{contact.largePartyNote}</p>
+        </div>
+
+        <div class="pc-feature__ctas">
+          <a class="pc-btn pc-btn--solid" href={RESERVE} target="_blank" rel="noopener">Reserve a table</a>
+          <a class="pc-btn pc-btn--outline" href={directions} target="_blank" rel="noopener">Get directions</a>
+          <a class="pc-btn pc-btn--outline" href={`tel:${contact.phoneE164}`}>{contact.phone}</a>
+        </div>
+      </div>
+
+      <div class="pc-feature__media">
+        <iframe
+          class="pc-map"
+          title={`Map to ${business.name} in ${location.city}`}
+          src={mapSrc}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+</Design4Layout>

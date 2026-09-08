@@ -1,0 +1,54 @@
+---
+import { foodAll } from "../../data/photos";
+const names = ["DSC06525", "DSC01349", "DSC09728", "DSC09668", "DSC05501", "DSC09509", "DSC09697", "DSC08704"];
+const photos = names.map(name => foodAll.find(photo => photo.name === name)!);
+---
+<div class="d2-gallery">
+  {photos.map((photo, index) => (
+    <a class="d2-gallery__photo" href={photo.src} data-gallery-index={index} data-caption={photo.alt} aria-label={`Enlarge: ${photo.alt}`}>
+      <img src={photo.thumb} srcset={`${photo.thumb} 640w, ${photo.src} 1600w`} sizes="(max-width: 600px) 46vw, (max-width: 1000px) 30vw, 24vw" alt={photo.alt} width="640" height="426" loading="lazy" decoding="async" />
+      <span class="d2-gallery__expand" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/></svg></span>
+    </a>
+  ))}
+</div>
+<dialog class="d2-lightbox" aria-label="Brunetta photo gallery">
+  <button class="d2-lightbox__close" type="button" aria-label="Close photo gallery">×</button>
+  <div class="d2-lightbox__image"><img alt="" /></div>
+  <div class="d2-lightbox__bottom">
+    <button type="button" data-gallery-prev aria-label="Previous photo">←</button>
+    <p aria-live="polite"><span data-gallery-caption></span><small data-gallery-count></small></p>
+    <button type="button" data-gallery-next aria-label="Next photo">→</button>
+  </div>
+</dialog>
+<script>
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-gallery-index]"));
+  const dialog = document.querySelector<HTMLDialogElement>(".d2-lightbox")!;
+  let current = 0;
+  let opener: HTMLAnchorElement | null = null;
+  let overflow = "";
+  const show = (index: number) => {
+    current = (index + links.length) % links.length;
+    const link = links[current];
+    const img = dialog.querySelector("img")!;
+    img.src = link.href; img.alt = link.dataset.caption ?? "";
+    dialog.querySelector("[data-gallery-caption]")!.textContent = img.alt;
+    dialog.querySelector("[data-gallery-count]")!.textContent = `${current + 1} / ${links.length}`;
+  };
+  links.forEach((link, index) => link.addEventListener("click", event => {
+    event.preventDefault(); opener = link; show(index);
+    overflow = document.body.style.overflow; document.body.style.overflow = "hidden";
+    dialog.showModal();
+  }));
+  dialog.querySelector(".d2-lightbox__close")!.addEventListener("click", () => dialog.close());
+  dialog.querySelector("[data-gallery-prev]")!.addEventListener("click", () => show(current - 1));
+  dialog.querySelector("[data-gallery-next]")!.addEventListener("click", () => show(current + 1));
+  dialog.addEventListener("keydown", event => {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); show(current + (event.key === "ArrowLeft" ? -1 : 1)); }
+  });
+  dialog.addEventListener("close", () => { document.body.style.overflow = overflow; opener?.focus(); });
+  dialog.addEventListener("click", event => {
+    if (event.target !== dialog) return;
+    const box = dialog.getBoundingClientRect();
+    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.close();
+  });
+</script>

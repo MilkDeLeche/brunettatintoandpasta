@@ -1,0 +1,55 @@
+---
+import Design4Layout from "../../layouts/Design4Layout.astro";
+import { menu, menuMeta, business } from "../../data/brunetta";
+
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+const RESERVE = "https://www.google.com/maps/reserve/v/dine/c/5H5kKRje0fU";
+---
+
+<Design4Layout
+  title={`Menu — ${business.name}`}
+  description="The full Brunetta Tinto & Pasta menu — antipasti, salads, soups, house-made pasta, risotto, steak, seafood, wood-fired pizza and dessert."
+  path="/design-4/menu"
+>
+  <section class="pc-page-head">
+    <div class="pc-wrap">
+      <p class="pc-eyebrow">La Carta</p>
+      <h1 class="pc-title">The <em>menu</em></h1>
+      <p class="pc-sub">Handmade pasta, wood-fired pizza, steak and seafood — the dishes we cook in McAllen.</p>
+    </div>
+  </section>
+
+  <nav class="pc-menu-chips" aria-label="Menu sections">
+    {menu.map((s) => <a href={`#${slugify(s.section)}`}>{s.section}</a>)}
+  </nav>
+
+  <div class="pc-block pc-wrap">
+    {menuMeta.needsProofing && (
+      <p class="pc-muted" style="font-size:0.9rem;margin-bottom:1.5rem;">
+        Spellings are the kitchen's current menu and are being proofed. {menuMeta.disclaimer}
+      </p>
+    )}
+    <div class="pc-menu-grid">
+      {menu.map((section) => (
+        <section id={slugify(section.section)} class="pc-menu-section">
+          <h2>{section.section}</h2>
+          <ul class="pc-menu-list">
+            {section.items.map((item) => (
+              <li>
+                <div class="pc-menu-row">
+                  <h3>{item.name}</h3>
+                  <span class="price">{item.price}</span>
+                </div>
+                {item.description && <p>{item.description}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+    <div style="margin-top:2.5rem;display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
+      <a class="pc-btn pc-btn--solid" href={RESERVE} target="_blank" rel="noopener">Reserve a table</a>
+      <span class="pc-muted" style="font-size:0.9rem;">{menuMeta.disclaimer}</span>
+    </div>
+  </div>
+</Design4Layout>

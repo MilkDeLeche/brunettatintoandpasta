@@ -1,0 +1,55 @@
+---
+import Design3Layout from "../../layouts/Design3Layout.astro";
+import { business } from "../../data/brunetta";
+import { foodAll } from "../../data/photos";
+---
+
+<Design3Layout
+  title={`Gallery — ${business.name}`}
+  description="Pasta, pizza, seafood, steak and dessert from the kitchen at Brunetta Tinto & Pasta."
+  path="/design-3/gallery"
+>
+  <section class="page-head">
+    <p class="eyebrow">From Our Kitchen</p>
+    <h1>A taste of Brunetta</h1>
+  </section>
+
+  <div class="page-body">
+    <div class="gc-gallery">
+      {foodAll.map((photo) => (
+        <a href={photo.src} data-lb data-alt={photo.alt} aria-label={`Enlarge: ${photo.alt}`}>
+          <img src={photo.thumb} alt={photo.alt} loading="lazy" width="640" height="426" />
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <dialog class="d3-lightbox" aria-label="Photo viewer">
+    <button type="button" aria-label="Close">×</button>
+    <img alt="" />
+    <p></p>
+  </dialog>
+</Design3Layout>
+
+<script>
+  const lb = document.querySelector<HTMLDialogElement>(".d3-lightbox")!;
+  const img = lb.querySelector("img")!;
+  const cap = lb.querySelector("p")!;
+  let opener: HTMLElement | null = null;
+  document.querySelectorAll<HTMLAnchorElement>("[data-lb]").forEach((a) =>
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      opener = a;
+      img.src = a.href;
+      img.alt = a.dataset.alt ?? "";
+      cap.textContent = a.dataset.alt ?? "";
+      lb.showModal();
+    })
+  );
+  lb.querySelector("button")!.addEventListener("click", () => lb.close());
+  lb.addEventListener("close", () => opener?.focus());
+  lb.addEventListener("click", (e) => {
+    const r = lb.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) lb.close();
+  });
+</script>

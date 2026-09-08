@@ -1,0 +1,40 @@
+---
+interface Props {
+  label: string;
+  aspect?: string;
+  class?: string;
+  /** Fill a sized parent instead of using aspect-ratio. */
+  fill?: boolean;
+  /** Real photo. Layout box stays the same; the stripe placeholder is the fallback. */
+  src?: string;
+  priority?: boolean;
+}
+const { label, aspect = "4/3", class: className = "", fill = false, src, priority = false } = Astro.props;
+---
+
+<div
+  class={`relative overflow-hidden bg-surface ${fill ? "h-full w-full" : ""} ${className}`}
+  style={fill ? undefined : `aspect-ratio:${aspect}`}
+  role="img"
+  aria-label={label}
+>
+  {
+    src ? (
+      <img src={src} alt={label} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : "auto"} decoding="async" class="absolute inset-0 h-full w-full object-cover" />
+    ) : (
+      <>
+        <div
+          class="absolute inset-0"
+          style="background:radial-gradient(circle at 25% 15%, color-mix(in srgb, var(--color-amber) 30%, transparent), transparent 60%), linear-gradient(160deg, var(--color-surface), var(--color-black))"
+        />
+        <div
+          class="absolute inset-0 opacity-[0.08]"
+          style="background-image: repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 1px, transparent 6px)"
+        />
+        <div class="absolute inset-0 flex items-end p-4">
+          <span class="font-body text-[11px] uppercase tracking-[0.18em] text-cream/70">{label}</span>
+        </div>
+      </>
+    )
+  }
+</div>

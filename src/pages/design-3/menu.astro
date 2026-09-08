@@ -1,0 +1,51 @@
+---
+import Design3Layout from "../../layouts/Design3Layout.astro";
+import { menu, menuMeta, business } from "../../data/brunetta";
+
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+---
+
+<Design3Layout
+  title={`Menu — ${business.name}`}
+  description="The full Brunetta Tinto & Pasta menu — antipasti, salads, soups, house-made pasta, risotto, steak, seafood, wood-fired pizza and dessert."
+  path="/design-3/menu"
+>
+  <section class="page-head">
+    <p class="eyebrow">La Carta</p>
+    <h1>The Menu</h1>
+    <p>Handmade pasta, wood-fired pizza, steak and seafood — the dishes we cook in McAllen.</p>
+  </section>
+
+  <nav class="menu-chips" aria-label="Menu sections">
+    {menu.map((s) => <a href={`#${slugify(s.section)}`}>{s.section}</a>)}
+  </nav>
+
+  {menuMeta.needsProofing && (
+    <p class="page-body" style="padding-block:1.5rem 0;text-align:center;color:var(--color-gc-muted);font-size:0.85rem;">
+      Spellings are the kitchen's current menu and are being proofed. {menuMeta.disclaimer}
+    </p>
+  )}
+
+  <div class="page-body">
+    <div class="menu-grid">
+      {menu.map((section) => (
+        <section id={slugify(section.section)} class="menu-section">
+          <h2>{section.section}</h2>
+          <ul class="menu-list">
+            {section.items.map((item) => (
+              <li>
+                <div class="menu-row">
+                  <span>{item.name}</span>
+                  <span class="lead" aria-hidden="true"></span>
+                  <span class="price">{item.price}</span>
+                </div>
+                {item.description && <p>{item.description}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+    <p style="margin-top:2rem;color:var(--color-gc-muted);font-size:0.85rem;">{menuMeta.disclaimer}</p>
+  </div>
+</Design3Layout>

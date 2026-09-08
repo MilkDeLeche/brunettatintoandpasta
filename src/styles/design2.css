@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+/*
+ * Design 2 — cloned from "Gusto Verde" (gusto-verde.framer.website).
+ * Verified from the live site's shipped CSS (fetched 2026-09-04):
+ *   fonts: Fraunces (serif, used mostly italic for accent words) + Afacad (sans)
+ *   palette: near-monochrome — white/off-white grounds, #111 ink, #999/#B3B3B3 muted grays
+ * No motion video was supplied for this reference (clone-intake gap) — the
+ * reveal-on-scroll below is a reasonable, clearly-labeled best-effort guess
+ * at typical Framer scroll-fade behavior, not a measured recreation.
+ * Self-contained: nothing here is referenced by Design 1.
+ */
+@theme {
+  --font-d2-serif: "Fraunces", Georgia, serif;
+  --font-d2-sans: "Afacad", Arial, sans-serif;
+
+  --color-d2-ink: #111111;
+  --color-d2-paper: #ffffff;
+  --color-d2-paper-soft: #f4f2ee;
+  --color-d2-muted: #6b6b6b;
+  --color-d2-line: #999999;
+  --color-d2-line-soft: #b3b3b3;
+}
+
+.d2 {
+  background: var(--color-d2-paper);
+  color: var(--color-d2-ink);
+  font-family: var(--font-d2-sans);
+}
+
+.d2 h1, .d2 h2, .d2 h3 {
+  font-family: var(--font-d2-sans);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.d2 em, .d2 .accent {
+  font-family: var(--font-d2-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.d2 :focus-visible {
+  outline: 2px solid var(--color-d2-ink);
+  outline-offset: 3px;
+}
+
+/* Reveal-on-scroll — see caveat above. Hidden state only via JS-added class. */
+@media (prefers-reduced-motion: no-preference) {
+  .d2.motion-ready [data-d2-reveal] {
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: opacity 550ms cubic-bezier(0.16, 1, 0.3, 1), transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--d2-delay, 0ms);
+  }
+  .d2.motion-ready [data-d2-reveal].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .d2 * {
+    scroll-behavior: auto !important;
+  }
+}
+
+.d2-tabs input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.d2-tabs .d2-tab-label {
+  cursor: pointer;
+}
+
+.d2-tabs .d2-tab-panel {
+  display: none;
+}
+
+/* Each numbered radio reveals its matching panel — pure CSS category tabs */
+#d2-cat-1:checked ~ .d2-panels #d2-panel-1,
+#d2-cat-2:checked ~ .d2-panels #d2-panel-2,
+#d2-cat-3:checked ~ .d2-panels #d2-panel-3,
+#d2-cat-4:checked ~ .d2-panels #d2-panel-4,
+#d2-cat-5:checked ~ .d2-panels #d2-panel-5 {
+  display: grid;
+}
+
+#d2-cat-1:checked ~ .d2-tabbar label[for="d2-cat-1"],
+#d2-cat-2:checked ~ .d2-tabbar label[for="d2-cat-2"],
+#d2-cat-3:checked ~ .d2-tabbar label[for="d2-cat-3"],
+#d2-cat-4:checked ~ .d2-tabbar label[for="d2-cat-4"],
+#d2-cat-5:checked ~ .d2-tabbar label[for="d2-cat-5"] {
+  color: var(--color-d2-ink);
+  border-color: var(--color-d2-ink);
+}

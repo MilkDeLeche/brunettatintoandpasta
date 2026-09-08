@@ -1,0 +1,150 @@
+/**
+ * <ConceptSwitcher> — the persistent demo bar. Plain imported stylesheet (not a
+ * scoped <style>) so it bundles reliably on the Layout/GustoLayout pages where
+ * Astro was dropping scoped component styles.
+ */
+
+/* Keep page content clear of the fixed bar (the picker page has no bar). */
+body {
+  padding-bottom: calc(3.25rem + env(safe-area-inset-bottom));
+}
+
+.concept-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem clamp(0.9rem, 3vw, 1.5rem);
+  padding-bottom: calc(0.6rem + env(safe-area-inset-bottom));
+  font-size: 0.82rem;
+  line-height: 1.2;
+  text-decoration: none;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.18);
+  transition: filter 0.2s ease;
+}
+.concept-bar:hover {
+  filter: brightness(1.05);
+}
+
+.concept-bar__dot {
+  flex-shrink: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+  animation: concept-bar-pulse 1.8s ease-in-out infinite;
+}
+@keyframes concept-bar-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.65); }
+}
+
+.concept-bar__text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.concept-bar__text strong {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+.concept-bar__sep {
+  opacity: 0.55;
+}
+.concept-bar__detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.concept-bar__cta {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .concept-bar__sep,
+  .concept-bar__detail {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .concept-bar,
+  .concept-bar:hover {
+    transition: none;
+    filter: none;
+  }
+  .concept-bar__dot {
+    animation: none;
+  }
+}
+
+/*
+ * Per-design skins. The doubled `.concept-bar.concept-bar--dN` selector keeps
+ * these winning over each design's own link resets (e.g. `.gv-page a`,
+ * `.d3 a { color: inherit }`) which would otherwise repaint the bar text.
+ */
+
+/* ---- Design 1 — Amrit: amber bar, dark ink ---- */
+.concept-bar.concept-bar--d1 {
+  background: #d49653;
+  color: #201c1e;
+  text-decoration: none;
+  font-family: "Satoshi", Arial, sans-serif;
+}
+.concept-bar.concept-bar--d1 .concept-bar__cta {
+  background: #201c1e;
+  color: #f0e6d8;
+}
+
+/* ---- Design 2 — Gusto: black bar, cream text ---- */
+.concept-bar.concept-bar--d2 {
+  background: #141414;
+  color: #f4f2ee;
+  text-decoration: none;
+  font-family: "Afacad", system-ui, sans-serif;
+}
+.concept-bar.concept-bar--d2 .concept-bar__cta {
+  background: #f4f2ee;
+  color: #141414;
+}
+
+/* ---- Design 3 — Golden Child: gold bar, black ---- */
+.concept-bar.concept-bar--d3 {
+  background: #e3c729;
+  color: #111;
+  text-decoration: none;
+  font-family: "Inter", system-ui, sans-serif;
+}
+.concept-bar.concept-bar--d3 .concept-bar__cta {
+  background: #111;
+  color: #e3c729;
+}
+
+/* ---- Design 4 — Picnic: orange bar, white ---- */
+.concept-bar.concept-bar--d4 {
+  background: #f74c25;
+  color: #fff;
+  text-decoration: none;
+  font-family: "Inter", system-ui, sans-serif;
+}
+.concept-bar.concept-bar--d4 .concept-bar__cta {
+  background: #fff;
+  color: #f74c25;
+}

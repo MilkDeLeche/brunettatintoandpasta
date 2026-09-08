@@ -1,0 +1,32 @@
+{
+  "name": "brunetta-tinto-pasta",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "studio": "sanity dev",
+    "studio:deploy": "sanity deploy",
+    "blog:ndjson": "node scripts/blog-to-ndjson.mjs",
+    "blog:import": "sanity dataset import scripts/blog.ndjson production"
+  },
+  "dependencies": {
+    "@astrojs/react": "^6.0.5",
+    "@astrojs/vercel": "^11.0.10",
+    "@portabletext/to-html": "^6.0.0",
+    "@sanity/astro": "^3.5.1",
+    "@sanity/client": "^8.6.1",
+    "@sanity/image-url": "^2.1.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.1",
+    "gsap": "^3.15.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "sanity": "^6.13.0",
+    "tailwindcss": "^4.3.3"
+  }
+}

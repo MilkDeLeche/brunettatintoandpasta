@@ -1,0 +1,44 @@
+---
+import Design4Layout from "../../layouts/Design4Layout.astro";
+import { about, business } from "../../data/brunetta";
+import { big, feature } from "../../data/photos";
+
+const RESERVE = "https://www.google.com/maps/reserve/v/dine/c/5H5kKRje0fU";
+const MENU = "/design-4/menu";
+---
+
+<Design4Layout title={`About — ${business.name}`} description={about.short} path="/design-4/about">
+  <section class="pc-page-head">
+    <div class="pc-wrap">
+      <p class="pc-eyebrow">Our Story</p>
+      <h1 class="pc-title">{about.headline}</h1>
+      <p class="pc-sub">{about.short}</p>
+    </div>
+  </section>
+
+  <section class="pc-block">
+    <div class="pc-wrap pc-feature">
+      <div class="pc-feature__copy">
+        <p class="pc-body-lg pc-muted">{about.storyVerbatim}</p>
+        <div class="pc-feature__ctas">
+          <a class="pc-btn pc-btn--solid" href={RESERVE} target="_blank" rel="noopener">Reserve a table</a>
+          <a class="pc-btn pc-btn--outline" href={MENU}>View the menu</a>
+        </div>
+      </div>
+      <div class="pc-feature__media">
+        <img src={big(feature.wine)} alt="Cheese and charcuterie at Brunetta" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section class="pc-block" style="background:#fff">
+    <div class="pc-wrap">
+      <p class="pc-eyebrow">What we believe in</p>
+      <div class="pc-why__grid" style="margin-top:1.5rem">
+        {about.values.map((v) => (
+          <article class="pc-card"><h3>{v}</h3></article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Design4Layout>

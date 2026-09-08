@@ -1,0 +1,104 @@
+---
+/**
+ * Design 3 — "Golden Child" language. Chrome (glass header + striped-gold
+ * wordmark footer) for the sub-pages under /design-3/*. The home page
+ * (components/design3/Home.astro) keeps its own inline chrome so the Phase A
+ * template clone stays untouched; nav + footer links here come from the same
+ * `brunettaOnGolden` data so they stay in sync.
+ */
+import "../styles/design3.css";
+import ConceptSwitcher from "../components/ConceptSwitcher.astro";
+import { brunettaOnGolden as c } from "../data/design3";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+}
+const { title, description, path } = Astro.props;
+const canonical = new URL(path, Astro.site);
+const year = new Date().getFullYear();
+const marquee = `${c.footer.marquee} · `.repeat(8);
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap"
+  />
+</head>
+<body>
+<div class="d3">
+  <header class="gc-header">
+    <div class="header-panel">
+      <div class="header-panel-glass"></div>
+      <div class="header-row">
+        <ul class="desktop-nav-list">
+          {c.navLeft.map((l) => (
+            <li><a href={l.href} aria-current={path === l.href ? "page" : undefined}>{l.label}</a></li>
+          ))}
+        </ul>
+        <a class="gc-logo" href={c.home} aria-label={c.name}>{c.name}</a>
+        <div class="header-actions">
+          <a class="btn btn-black text-body-sm" href={c.navCta.href} target="_blank" rel="noopener">{c.navCta.label}</a>
+        </div>
+        <details class="gc-mobile-nav">
+          <summary aria-label="Open menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </summary>
+          <nav aria-label="Mobile">
+            <a href={c.home}>Home</a>
+            {c.navLeft.map((l) => <a href={l.href}>{l.label}</a>)}
+            <a href={c.navCta.href} target="_blank" rel="noopener">{c.navCta.label}</a>
+          </nav>
+        </details>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="gc-footer">
+    <div class="gc-footer__cols">
+      {c.footer.cols.map((col) => (
+        <div>
+          <h3>{col.title}</h3>
+          <ul>
+            {col.links.map(([label, href]) => (
+              <li><a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener" : undefined}>{label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <p class="gc-word">{c.footer.word}</p>
+    <div class="gc-marquee"><p>{marquee}</p></div>
+    <p class="gc-copy">© {year} Brunetta Tinto &amp; Pasta. All Rights Reserved.</p>
+  </footer>
+
+  <ConceptSwitcher design={3} />
+</div>
+
+<script>
+  const mob = document.querySelector<HTMLDetailsElement>(".gc-mobile-nav");
+  mob?.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { mob.open = false; mob.querySelector("summary")?.focus(); }
+  });
+  document.addEventListener("click", (e) => {
+    if (mob?.open && e.target instanceof Node && !mob.contains(e.target)) mob.open = false;
+  });
+</script>
+</body>
+</html>

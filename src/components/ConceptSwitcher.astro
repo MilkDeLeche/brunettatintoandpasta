@@ -1,0 +1,31 @@
+---
+/**
+ * Persistent "design preview" bar. Fixed to the bottom of every design page,
+ * full-width, in that design's accent colour — so the client always knows
+ * they're looking at one of four preview designs and can jump back to the
+ * selection page from anywhere. Not dismissible by design.
+ */
+import "../styles/concept-switcher.css";
+
+interface Props {
+  design: 1 | 2 | 3 | 4;
+  href?: string;
+}
+const { design, href = "/" } = Astro.props;
+const n = String(design).padStart(2, "0");
+---
+
+<a
+  class:list={["concept-bar", `concept-bar--d${design}`]}
+  href={href}
+  data-concept-bar
+  aria-label={`Design preview ${n} of 4 — back to all designs`}
+>
+  <span class="concept-bar__dot" aria-hidden="true"></span>
+  <span class="concept-bar__text">
+    <strong>Design preview</strong>
+    <span class="concept-bar__sep" aria-hidden="true">·</span>
+    <span class="concept-bar__detail">Design {n} of 4</span>
+  </span>
+  <span class="concept-bar__cta">See all 4 designs <span aria-hidden="true">&rarr;</span></span>
+</a>

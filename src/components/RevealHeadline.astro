@@ -1,0 +1,23 @@
+---
+// Word-mask reveal (build-time split, CSS-driven). Each word is its own
+// inline-block span with a real space text node between them, so the line
+// still wraps normally — see [data-reveal-words] in global.css.
+interface Props {
+  text: string;
+  as?: "h1" | "h2" | "h3";
+  class?: string;
+}
+const { text, as: Tag = "h2", class: className = "" } = Astro.props;
+const words = text.split(" ");
+---
+
+<Tag class={className} data-reveal-words>
+  {
+    words.map((w, i) => (
+      <>
+        <span class="word"><span style={`--word-index:${i}`}>{w}</span></span>
+        {i < words.length - 1 ? " " : ""}
+      </>
+    ))
+  }
+</Tag>

@@ -1,0 +1,13 @@
+---
+// DESIGN 3 — PHASE A. Verbatim clone of "Golden Child" (mygoldenchild.com),
+// rendered from the template's own content (`golden`) through the shared
+// component. Structure follows the fetched source in
+// assets/reference_2/template/ (home.html, body-full.txt); CSS values in
+// design3.css are transcribed from its tailwind.css. No motion video was
+// supplied — the template's JS-driven reveals are not reproduced here.
+// The Brunetta rebrand (Phase B) is at /design-3.
+import Home from "../../../components/design3/Home.astro";
+import { golden } from "../../../data/design3";
+---
+
+<Home content={golden} />

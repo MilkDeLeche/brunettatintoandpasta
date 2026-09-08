@@ -1,0 +1,31 @@
+---
+import PlaceholderImage from "./PlaceholderImage.astro";
+import { homepage } from "../data/brunetta";
+import { big, feature } from "../data/photos";
+
+const { spirit } = homepage;
+---
+
+<section class="video_section relative h-screen w-screen overflow-hidden" data-parallax-section>
+  <div class="absolute inset-0">
+    <PlaceholderImage src={big(feature.heroAlt)} label={spirit.mediaLabel} fill class="h-full w-full" />
+    <div class="absolute inset-0 z-[5] bg-black/55"></div>
+  </div>
+
+  <div class="relative z-10 flex h-full flex-col justify-center px-[1.75em] py-[2.75em]">
+    <div class="max-w-[36rem]" data-reveal>
+      <h2
+        class="text-[5.5em] font-light uppercase leading-[0.85] tracking-[-0.03em] text-[var(--biege)]"
+        data-letters
+      >
+        {spirit.title}
+      </h2>
+      <p class="mt-[0.5em] max-w-[24rem] text-[1.05em] leading-[1.55] text-[var(--biege)]">
+        {spirit.subtitle}
+      </p>
+      <a href={spirit.cta.href} class="btn-outline mt-[1.5em]">
+        {spirit.cta.label}
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,64 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import RevealHeadline from "../../components/RevealHeadline.astro";
+import LocationMap from "../../components/LocationMap.astro";
+import { business, location, hours, contact, nav } from "../../data/brunetta";
+
+const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+  `${location.street}, ${location.city}, ${location.state} ${location.zip}`
+)}`;
+---
+
+<Layout
+  title={`Location & Hours — ${business.name}`}
+  description={`Find ${business.name} at ${location.street}, ${location.city}, ${location.state} ${location.zip}.`}
+  path="/design-1/location"
+>
+  <section class="bg-cream">
+    <div class="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-2 md:items-center md:px-8 md:py-28">
+      <div data-reveal class="min-w-0">
+        <p class="font-script text-2xl text-amber-deep">Visit Us</p>
+        <RevealHeadline
+          text="Right in the heart of McAllen"
+          as="h1"
+          class="mt-3 max-w-[14ch] text-balance text-4xl leading-[1.05] md:text-[2.75rem]"
+        />
+
+        <address class="mt-8 not-italic">
+          <p class="font-display text-xl">{location.street}</p>
+          <p class="font-display text-xl">{location.city}, {location.state} {location.zip}</p>
+          <p class="mt-3 text-sm text-ink/60">{location.landmark}</p>
+        </address>
+
+        <div class="mt-8">
+          <p class="font-body text-xs font-semibold uppercase tracking-[0.2em] text-ink/50">Hours</p>
+          <ul class="mt-3 space-y-1">
+            {hours.displayGrouped.map((row) => (
+              <li class="flex justify-between border-b border-ink/10 py-1.5 text-sm">
+                <span class="text-ink/70">{row.label}</span>
+                <span>{row.value}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-3 text-xs text-ink/50">{contact.largePartyNote}</p>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href={nav.primaryCta.href} target="_blank" rel="noopener" class="rounded-sm bg-amber px-6 py-3 font-body text-sm font-semibold uppercase tracking-[0.12em] text-black hover:bg-amber-deep">
+            Make a Reservation
+          </a>
+          <a href={directionsUrl} target="_blank" rel="noopener" class="rounded-sm border border-ink/30 px-6 py-3 font-body text-sm font-semibold uppercase tracking-[0.12em] hover:border-amber-deep hover:text-amber-deep">
+            Get Directions
+          </a>
+          <a href={`tel:${contact.phoneE164}`} class="rounded-sm border border-ink/30 px-6 py-3 font-body text-sm font-semibold uppercase tracking-[0.12em] hover:border-amber-deep hover:text-amber-deep">
+            {contact.phone}
+          </a>
+        </div>
+      </div>
+
+      <div class="min-w-0">
+        <LocationMap />
+      </div>
+    </div>
+  </section>
+</Layout>

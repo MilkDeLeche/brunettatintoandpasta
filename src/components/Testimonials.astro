@@ -1,0 +1,13 @@
+---
+import { homepage, reviews } from "../data/brunetta";
+---
+{reviews.approvedTestimonials.length > 0 && (
+  <section class="brunetta-testimonials">
+    <h2>{homepage.testimonials.title}</h2>
+    <div>
+      {reviews.approvedTestimonials.map(review => (
+        <figure><blockquote>{review.quote}</blockquote><figcaption>{review.name}, {review.source}</figcaption></figure>
+      ))}
+    </div>
+  </section>
+)}

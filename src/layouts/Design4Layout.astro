@@ -1,0 +1,107 @@
+---
+/**
+ * Design 4 — "Picnic" language. Chrome (sticky paper header + big orange
+ * wordmark footer) for the sub-pages under /design-4/*. The home page
+ * (components/design4/Home.astro) keeps its own inline chrome; nav + footer
+ * links here come from the same `brunettaOnPicnic` data.
+ */
+import "../styles/design4.css";
+import ConceptSwitcher from "../components/ConceptSwitcher.astro";
+import { brunettaOnPicnic as c } from "../data/design4";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+}
+const { title, description, path } = Astro.props;
+const canonical = new URL(path, Astro.site);
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap"
+  />
+</head>
+<body>
+<div class="d4">
+  <header class="pc-header">
+    <div class="pc-header__row">
+      <a class="pc-logo" href={c.home}>{c.name}</a>
+      <nav class="pc-header__nav" aria-label="Primary">
+        {c.nav.map((l) => <a href={l.href} aria-current={path === l.href ? "page" : undefined}>{l.label}</a>)}
+      </nav>
+      <div class="pc-header__cta">
+        <a class="pc-btn pc-btn--outline" href={c.ctaPrimary.href} target="_blank" rel="noopener" style="height:2.5rem">{c.ctaPrimary.label}</a>
+        <a class="pc-btn pc-btn--solid" href={c.ctaSecondary.href} style="height:2.5rem">{c.ctaSecondary.label}</a>
+      </div>
+      <details class="pc-mobile-nav">
+        <summary aria-label="Open menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </summary>
+        <nav aria-label="Mobile">
+          <a href={c.home}>Home</a>
+          {c.nav.map((l) => <a href={l.href}>{l.label}</a>)}
+          <a href={c.ctaPrimary.href} target="_blank" rel="noopener">{c.ctaPrimary.label}</a>
+        </nav>
+      </details>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="pc-footer">
+    <div class="pc-footer__top">
+      <div>
+        <p class="pc-body-lg pc-footer__blurb">{c.footer.blurb}</p>
+        <div class="pc-footer__ctas" style="margin-top:1.5rem">
+          {c.footer.ctas.map((l) => (
+            <a class="pc-btn pc-btn--dark" href={l.href} target={l.href.startsWith("http") ? "_blank" : undefined} rel={l.href.startsWith("http") ? "noopener" : undefined}>{l.label}</a>
+          ))}
+        </div>
+      </div>
+      <div class="pc-footer__cols">
+        {c.footer.cols.map((col) => (
+          <div>
+            <h4>{col.title}</h4>
+            <ul>
+              {col.links.map(([label, href]) => (
+                <li><a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener" : undefined}>{label}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+    <p class="pc-footer__word">{c.footer.word}</p>
+    <p style="text-align:center;padding:0 0 1.5rem;font-size:0.8rem;opacity:0.85">© {year} Brunetta Tinto &amp; Pasta. All rights reserved.</p>
+  </footer>
+
+  <ConceptSwitcher design={4} />
+</div>
+
+<script>
+  const mob = document.querySelector<HTMLDetailsElement>(".pc-mobile-nav");
+  mob?.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { mob.open = false; mob.querySelector("summary")?.focus(); }
+  });
+  document.addEventListener("click", (e) => {
+    if (mob?.open && e.target instanceof Node && !mob.contains(e.target)) mob.open = false;
+  });
+</script>
+</body>
+</html>

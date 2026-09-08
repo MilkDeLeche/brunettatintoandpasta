@@ -1,0 +1,29 @@
+---
+import PlaceholderImage from "./PlaceholderImage.astro";
+import { homepage, nav } from "../data/brunetta";
+
+const { hero } = homepage;
+---
+<section id="hero-section" class="brunetta-hero" data-hero>
+  <div class="brunetta-hero__photo" data-parallax>
+    <PlaceholderImage src="/img/hero.webp" label="Brunetta Tinto & Pasta" fill priority />
+  </div>
+  <div class="brunetta-hero__shade"></div>
+  <div class="brunetta-hero__content">
+    <p class="brunetta-hero__location">{hero.captionLeft}</p>
+    <h1 class="brunetta-hero__title" aria-label="Tinto & Pasta">
+      <span data-letters>{hero.line1}</span>
+      <span data-letters>{hero.line2}</span>
+    </h1>
+    <div class="brunetta-hero__bottom">
+      <div>
+        <p class="brunetta-hero__caption">{hero.captionRight}</p>
+        <p class="brunetta-hero__blurb">{hero.blurb}</p>
+      </div>
+      <div class="brunetta-hero__actions">
+        <a href={nav.reserve.href} target="_blank" rel="noopener" class="btn-reserve">{nav.reserve.label}<span aria-hidden="true">↗</span></a>
+        <a href={nav.menu.href} class="btn-outline">{nav.menu.label}<span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>

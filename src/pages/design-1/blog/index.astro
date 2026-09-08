@@ -1,0 +1,44 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import RevealHeadline from "../../../components/RevealHeadline.astro";
+import { business } from "../../../data/brunetta";
+import { getPosts } from "../../../lib/posts";
+
+const posts = await getPosts();
+---
+
+<Layout
+  title={`Blog — ${business.name}`}
+  description="Stories, wine pairings, and Italian dining tips from Brunetta Tinto & Pasta in McAllen, TX."
+  path="/design-1/blog"
+>
+  <section class="bg-black px-5 py-20 text-cream md:px-8 md:py-28">
+    <div class="mx-auto max-w-3xl text-center">
+      <p data-reveal class="font-script text-2xl text-amber">From the Kitchen</p>
+      <RevealHeadline text="Blog" as="h1" class="mt-3 text-5xl md:text-6xl" />
+    </div>
+  </section>
+
+  <section class="bg-cream">
+    <div class="mx-auto grid max-w-4xl gap-8 px-5 py-16 sm:grid-cols-2 md:px-8 md:py-24">
+      {
+        posts.map((post) => (
+          <a href={`/design-1/blog/${post.slug}`} data-reveal class="group block border-t border-ink/15 pt-5">
+            {post.cover && (
+              <img src={post.cover.url + "?w=800&auto=format"} alt={post.cover.alt} loading="lazy" class="mb-3 aspect-[4/3] w-full rounded-sm object-cover" />
+            )}
+            {post.dateLabel && (
+              <p class="text-xs uppercase tracking-[0.14em] text-ink/50">{post.dateLabel}</p>
+            )}
+            <h2 class="mt-2 font-display text-2xl leading-snug group-hover:text-amber-deep">{post.title}</h2>
+            <p class="mt-2 text-sm text-ink/70">{post.excerpt}</p>
+            <span class="mt-3 inline-block text-xs font-semibold uppercase tracking-[0.12em] text-amber-deep">
+              Read more &rarr;
+            </span>
+          </a>
+        ))
+      }
+      {posts.length === 0 && <p class="text-ink/60">No posts yet — check back soon.</p>}
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,185 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import ConceptSwitcher from "../components/ConceptSwitcher.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+
+const { title, description, path = "/" } = Astro.props;
+const canonicalURL = new URL(path, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Bad+Script&display=swap"
+    />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-sm focus:bg-amber focus:px-4 focus:py-2 focus:font-body focus:text-sm focus:font-semibold focus:text-black"
+    >
+      Skip to content
+    </a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <ConceptSwitcher design={1} />
+
+    <script>
+      const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const header = document.querySelector<HTMLElement>("[data-header]");
+      const hero = document.querySelector("#hero-section");
+
+      function splitLetters(root: Element) {
+        if (root.getAttribute("data-split") === "1") return;
+        const text = root.textContent ?? "";
+        root.setAttribute("aria-label", text.trim());
+        root.textContent = "";
+        const words = text.trim().split(/(\s+)/);
+        let charIndex = 0;
+        for (const piece of words) {
+          if (/^\s+$/.test(piece)) {
+            root.append(document.createTextNode(piece));
+            continue;
+          }
+          const word = document.createElement("span");
+          word.className = "word";
+          word.setAttribute("aria-hidden", "true");
+          for (const ch of piece) {
+            const span = document.createElement("span");
+            span.className = "char";
+            span.style.setProperty("--char-i", String(charIndex++));
+            span.textContent = ch;
+            word.append(span);
+          }
+          root.append(word);
+        }
+        root.setAttribute("data-split", "1");
+        root.classList.add("is-split");
+      }
+
+      if (!prefersReducedMotion) {
+        document.documentElement.classList.add("motion-ready");
+        document.querySelectorAll("[data-letters]").forEach(splitLetters);
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.18, rootMargin: "0px 0px -8% 0px" }
+        );
+
+        document.querySelectorAll("[data-reveal], [data-reveal-words], [data-letters]").forEach((el) => {
+          io.observe(el);
+        });
+
+        // Soft parallax (Amrit IX2 y ±5% scrub approximation)
+        const parallaxNodes = Array.from(document.querySelectorAll<HTMLElement>("[data-parallax]"));
+        let ticking = false;
+        const onScrollParallax = () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            const vh = window.innerHeight;
+            for (const node of parallaxNodes) {
+              const rect = node.getBoundingClientRect();
+              const progress = (vh / 2 - (rect.top + rect.height / 2)) / vh;
+              node.style.transform = `translate3d(0, ${progress * 5}%, 0)`;
+            }
+            ticking = false;
+          });
+        };
+        window.addEventListener("scroll", onScrollParallax, { passive: true });
+        onScrollParallax();
+      } else {
+        document.querySelectorAll("[data-letters]").forEach((el) => {
+          el.classList.add("is-visible", "is-split");
+        });
+      }
+
+      // Header: transparent over hero → frosted after leaving; hide on scroll down (desktop)
+      if (header) {
+
+        const updateHeader = () => {
+          if (hero) {
+            const heroBottom = hero.getBoundingClientRect().bottom;
+            header.classList.toggle("is-colored", heroBottom < 80);
+          } else {
+            header.classList.add("is-colored");
+          }
+
+          header.classList.remove("is-hidden");
+        };
+        window.addEventListener("scroll", updateHeader, { passive: true });
+        updateHeader();
+      }
+    </script>
+
+    <script>
+      // Design 1 — GSAP: nudge the trailing arrow glyph (↗ / →) on button hover.
+      import gsap from "gsap";
+
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (!reduce) {
+        const buttons = document.querySelectorAll<HTMLElement>(
+          ".btn-reserve, .btn-dark, .btn-outline"
+        );
+
+        for (const btn of buttons) {
+          const arrow = btn.querySelector<HTMLElement>("span[aria-hidden]");
+          if (!arrow) continue;
+
+          // Diagonal arrows travel up-and-right; plain arrows just slide right.
+          const diagonal = (arrow.textContent ?? "").includes("↗");
+          const dx = diagonal ? 4 : 5;
+          const dy = diagonal ? -4 : 0;
+          const move = gsap.quickTo(arrow, "x", { duration: 0.3, ease: "back.out(3)" });
+          const moveY = gsap.quickTo(arrow, "y", { duration: 0.3, ease: "back.out(3)" });
+
+          btn.addEventListener("pointerenter", () => {
+            move(dx);
+            moveY(dy);
+          });
+          btn.addEventListener("pointerleave", () => {
+            move(0);
+            moveY(0);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

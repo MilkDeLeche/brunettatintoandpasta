@@ -1,0 +1,22 @@
+---
+import { business, location } from "../data/brunetta";
+const address = `${business.name}, ${location.street}, ${location.city}, ${location.state} ${location.zip}`;
+---
+<iframe
+  class="brunetta-map"
+  title={`Map to ${business.name} in ${location.city}`}
+  src={`https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`}
+  width="100%" height="480" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+></iframe>
+<style>
+  .brunetta-map {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: clamp(300px, 40vw, 520px);
+    border: 0;
+    border-radius: 3px;
+    background: #d8cbb8;
+  }
+</style>

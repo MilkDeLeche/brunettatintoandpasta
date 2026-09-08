@@ -1,0 +1,47 @@
+---
+import Design3Layout from "../../layouts/Design3Layout.astro";
+import { business, contact, location, hours } from "../../data/brunetta";
+
+const RESERVE = "https://www.google.com/maps/reserve/v/dine/c/5H5kKRje0fU";
+---
+
+<Design3Layout
+  title={`Contact — ${business.name}`}
+  description={`Call ${business.name} at ${contact.phone} or make a reservation online.`}
+  path="/design-3/contact"
+>
+  <section class="page-head">
+    <p class="eyebrow">Get In Touch</p>
+    <h1>Contact Us</h1>
+    <p>The quickest way to book is Reserve with Google; for parties of seven or more, please call.</p>
+  </section>
+
+  <div class="page-body" style="max-width:60rem">
+    <div class="info-grid">
+      <div class="info-card">
+        <p class="eyebrow">Phone</p>
+        <a class="big" href={`tel:${contact.phoneE164}`}>{contact.phone}</a>
+        <p class="text-body-sm" style="color:var(--color-gc-muted);margin-top:0.4rem">{contact.largePartyNote}</p>
+      </div>
+      <div class="info-card">
+        <p class="eyebrow">Address</p>
+        <p class="big">{location.street}</p>
+        <p class="big">{location.city}, {location.state} {location.zip}</p>
+      </div>
+      <div class="info-card" style="grid-column:1/-1">
+        <p class="eyebrow">Hours</p>
+        <ul style="list-style:none;margin:0.6rem 0 0;padding:0;">
+          {hours.displayGrouped.map((row) => (
+            <li style="display:flex;justify-content:space-between;gap:1rem;padding:0.35rem 0;font-size:0.95rem;">
+              <span style="color:var(--color-gc-ink-soft)">{row.label}</span>
+              <span>{row.value}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:2rem">
+      <a class="btn btn-black" href={RESERVE} target="_blank" rel="noopener">Make a reservation</a>
+    </div>
+  </div>
+</Design3Layout>

@@ -1,0 +1,239 @@
+---
+/**
+ * Design 4 — "Picnic" clone, rendered from a content object so one structure
+ * serves both the Phase A clone (`picnic`, /design-4/template) and the Phase B
+ * rebrand (`brunettaOnPicnic`, /design-4).
+ *
+ * Section order follows the fetched source (assets/reference_4/template/
+ * body-raw.html): sticky header, full-bleed hero, press strip, "Our solutions"
+ * list + round media, "Why Picnic?" card grid, a "many orders" feature, the
+ * cuisine ticker, a centred testimonial, an "options without the fees"
+ * feature, "Trusted by many" logos, an Instagram strip, and the big orange
+ * footer with a giant wordmark. CSS values in design4.css are transcribed
+ * from styled-components.css.
+ */
+import "../../styles/design4.css";
+import ConceptSwitcher from "../ConceptSwitcher.astro";
+
+interface Link { label: string; href: string }
+interface Feature {
+  titleBefore: string; titleEm: string; titleAfter: string;
+  body: string; ctas: readonly Link[]; image: string;
+}
+interface Props {
+  content: {
+    name: string; home: string;
+    nav: readonly Link[];
+    ctaPrimary: Link; ctaSecondary: Link;
+    hero: { image: string; titleBefore: string; titleAccent: string; titleAfter: string; sub: string; ctas: readonly Link[] };
+    press: readonly string[];
+    solutions: { title: string; items: readonly { name: string; desc: string }[]; media: { image: string; label: string } };
+    why: { title: string; sub: string; cards: readonly { title: string; body: string }[] };
+    feature1: Feature;
+    ticker: readonly (readonly [string] | readonly [string, string])[];
+    quote: { head: string; text: string; cite: string; cta: Link };
+    feature2: Feature;
+    trusted: { title: string; logos: readonly string[] };
+    insta: { handle: string; images: readonly string[] };
+    footer: { blurb: string; ctas: readonly Link[]; cols: readonly { title: string; links: readonly (readonly [string, string])[] }[]; word: string; copy: string };
+  };
+}
+const { content: c } = Astro.props;
+const ticker = [...c.ticker, ...c.ticker];
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{c.name === "Picnic" ? "Picnic — office lunch delivery" : "Brunetta Tinto & Pasta — Authentic Italian Fine Dining"}</title>
+  <meta name="robots" content={c.name === "Picnic" ? "noindex" : "index,follow"} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" />
+</head>
+<body>
+<div class="d4">
+  <header class="pc-header">
+    <div class="pc-header__row">
+      <a class="pc-logo" href={c.home}>{c.name}</a>
+      <nav class="pc-header__nav" aria-label="Primary">
+        {c.nav.map((l) => <a href={l.href}>{l.label}</a>)}
+      </nav>
+      <div class="pc-header__cta">
+        <a class="pc-btn pc-btn--outline" href={c.ctaPrimary.href} style="height:2.5rem">{c.ctaPrimary.label}</a>
+        <a class="pc-btn pc-btn--solid" href={c.ctaSecondary.href} style="height:2.5rem">{c.ctaSecondary.label}</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="pc-hero">
+      <img src={c.hero.image} alt="" fetchpriority="high" />
+      <div class="pc-hero__scrim"></div>
+      <div class="pc-hero__inner">
+        <div class="pc-hero__copy">
+          <h1 class="pc-title">{c.hero.titleBefore} <span class="accent">{c.hero.titleAccent}</span>{c.hero.titleAfter ? ` ${c.hero.titleAfter}` : ""}</h1>
+          <p class="pc-body-lg">{c.hero.sub}</p>
+          <div class="pc-hero__ctas">
+            <a class="pc-btn pc-btn--solid" href={c.hero.ctas[0].href}>{c.hero.ctas[0].label}</a>
+            <a class="pc-btn pc-btn--ghost" href={c.hero.ctas[1].href}>{c.hero.ctas[1].label}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRESS -->
+    <section class="pc-press">
+      <div class="pc-press__row">
+        {c.press.map((name) => <span>{name}</span>)}
+      </div>
+    </section>
+
+    <!-- SOLUTIONS -->
+    <section class="pc-block">
+      <div class="pc-wrap pc-solutions">
+        <div>
+          <h2 class="pc-title" style="margin-bottom:1.5rem">{c.solutions.title}</h2>
+          <div class="pc-solutions__list">
+            {c.solutions.items.map((it) => (
+              <div class="pc-solutions__item">
+                <h3>{it.name}</h3>
+                <p>{it.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <figure class="pc-solutions__media">
+          <img src={c.solutions.media.image} alt="" loading="lazy" />
+          <span>{c.solutions.media.label} &rarr;</span>
+        </figure>
+      </div>
+    </section>
+
+    <!-- WHY -->
+    <section class="pc-block" style="background:#fff">
+      <div class="pc-wrap">
+        <div class="pc-why__head">
+          <h2 class="pc-title">{c.why.title}</h2>
+          <p class="pc-body-lg pc-muted" style="margin-top:1rem">{c.why.sub}</p>
+        </div>
+        <div class="pc-why__grid">
+          {c.why.cards.map((card) => (
+            <article class="pc-card">
+              <h3>{card.title}</h3>
+              <p>{card.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURE 1 -->
+    <section class="pc-block">
+      <div class="pc-wrap pc-feature">
+        <div class="pc-feature__copy">
+          <h2 class="pc-title">{c.feature1.titleBefore} <em>{c.feature1.titleEm}</em> {c.feature1.titleAfter}</h2>
+          <p class="pc-body-lg pc-muted">{c.feature1.body}</p>
+          <div class="pc-feature__ctas">
+            <a class="pc-btn pc-btn--solid" href={c.feature1.ctas[0].href}>{c.feature1.ctas[0].label}</a>
+            <a class="pc-btn pc-btn--outline" href={c.feature1.ctas[1].href}>{c.feature1.ctas[1].label}</a>
+          </div>
+        </div>
+        <div class="pc-feature__media">
+          <img src={c.feature1.image} alt="" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- CUISINE TICKER -->
+    <div class="pc-ticker" aria-hidden="true">
+      <div class="pc-ticker__track">
+        {ticker.map(([word, mod]) => (
+          <span>{mod === "em" ? <em>{word}</em> : word} <span aria-hidden="true">·</span></span>
+        ))}
+      </div>
+    </div>
+
+    <!-- TESTIMONIAL -->
+    <section class="pc-block">
+      <div class="pc-wrap pc-quote">
+        <div class="pc-quote__head">
+          <h2 class="pc-sub">{c.quote.head}</h2>
+        </div>
+        <blockquote>&ldquo;{c.quote.text}&rdquo;</blockquote>
+        <cite>{c.quote.cite}</cite>
+        <p style="margin-top:1.5rem">
+          <a class="pc-btn pc-btn--outline" href={c.quote.cta.href}>{c.quote.cta.label}</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- FEATURE 2 -->
+    <section class="pc-block" style="background:#fff">
+      <div class="pc-wrap pc-feature pc-feature--flip pc-feature--round">
+        <div class="pc-feature__copy">
+          <h2 class="pc-title">{c.feature2.titleBefore} <em>{c.feature2.titleEm}</em> {c.feature2.titleAfter}</h2>
+          <p class="pc-body-lg pc-muted">{c.feature2.body}</p>
+          <div class="pc-feature__ctas">
+            <a class="pc-btn pc-btn--solid" href={c.feature2.ctas[0].href}>{c.feature2.ctas[0].label}</a>
+            <a class="pc-btn pc-btn--outline" href={c.feature2.ctas[1].href}>{c.feature2.ctas[1].label}</a>
+          </div>
+        </div>
+        <div class="pc-feature__media">
+          <img src={c.feature2.image} alt="" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUSTED -->
+    <section class="pc-block">
+      <div class="pc-wrap" style="text-align:center">
+        <h2 class="pc-title">{c.trusted.title}</h2>
+        <div class="pc-press__row" style="border:0;margin-top:2rem">
+          {c.trusted.logos.map((name) => <span>{name}</span>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- INSTAGRAM -->
+    <section class="pc-block" style="padding-top:0">
+      <div class="pc-wrap">
+        <p class="pc-sub" style="text-align:center;margin-bottom:1.5rem">Follow us on Instagram {c.insta.handle}</p>
+        <div class="pc-insta__row">
+          {c.insta.images.map((src) => <img src={src} alt="" loading="lazy" />)}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="pc-footer">
+    <div class="pc-footer__top">
+      <div>
+        <p class="pc-body-lg pc-footer__blurb">{c.footer.blurb}</p>
+        <div class="pc-footer__ctas" style="margin-top:1.5rem">
+          {c.footer.ctas.map((l) => <a class="pc-btn pc-btn--dark" href={l.href}>{l.label}</a>)}
+        </div>
+      </div>
+      <div class="pc-footer__cols">
+        {c.footer.cols.map((col) => (
+          <div>
+            <h4>{col.title}</h4>
+            <ul>
+              {col.links.map(([label, href]) => <li><a href={href}>{label}</a></li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+    <p class="pc-footer__word">{c.footer.word}</p>
+    <p style="text-align:center;padding:0 0 1.5rem;font-size:0.8rem;opacity:0.85">{c.footer.copy}</p>
+  </footer>
+  <ConceptSwitcher design={4} />
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+---
+import PlaceholderImage from "./PlaceholderImage.astro";
+import { homepage } from "../data/brunetta";
+
+const { gift } = homepage;
+---
+
+<section class="gift_card relative h-[150vh] w-screen overflow-hidden bg-[var(--biege)]">
+  <div class="relative z-10 px-[1.75em] pb-[2em] pt-[3em] text-center" data-reveal>
+    <h2
+      class="mx-auto max-w-[18ch] text-[5.75em] font-light uppercase leading-[0.85] tracking-[-0.03em] text-[var(--dark)]"
+      data-letters
+    >
+      {gift.title}
+    </h2>
+    <p class="mx-auto mt-[1em] max-w-[45ch] text-[1.05em] leading-[1.55] text-[var(--dark)]/80">
+      {gift.body}
+    </p>
+    <a
+      href={gift.cta.href}
+      class="btn-dark mt-[1.5em]"
+      target={gift.cta.href.startsWith("http") ? "_blank" : undefined}
+      rel={gift.cta.href.startsWith("http") ? "noopener" : undefined}
+    >
+      {gift.cta.label}
+    </a>
+  </div>
+
+  <div class="absolute inset-0 top-[22em] flex items-center justify-center px-[1.75em]">
+    <div class="grid w-full max-w-[70em] grid-cols-1 items-center gap-4 md:grid-cols-3">
+      <p
+        class="hidden text-center text-[1.4em] font-light uppercase tracking-[-0.02em] text-[var(--dark)]/50 md:block"
+        data-letters
+      >
+        {gift.orbitLeft}
+      </p>
+      <div class="relative mx-auto aspect-square w-full max-w-[28em] overflow-hidden bg-[var(--surface-raised-alt)]">
+        <PlaceholderImage label={gift.imageLabel} fill class="h-full w-full" />
+      </div>
+      <p
+        class="hidden text-center text-[1.4em] font-light uppercase tracking-[-0.02em] text-[var(--dark)]/50 md:block"
+        data-letters
+      >
+        {gift.orbitRight}
+      </p>
+    </div>
+  </div>
+</section>

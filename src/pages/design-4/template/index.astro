@@ -1,0 +1,11 @@
+---
+// DESIGN 4 — PHASE A. Clone of "Picnic" (trypicnic.com) rendered from the
+// template's own content (`picnic`). Picnic is Next.js + styled-components,
+// so its hashed class names aren't reusable — design4.css carries the exact
+// transcribed type scale, colours and layouts (see its header comment).
+// The Brunetta rebrand (Phase B) is at /design-4.
+import Home from "../../../components/design4/Home.astro";
+import { picnic } from "../../../data/design4";
+---
+
+<Home content={picnic} />

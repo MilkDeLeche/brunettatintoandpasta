@@ -1,0 +1,48 @@
+---
+import RevealHeadline from "./RevealHeadline.astro";
+import LocationMap from "./LocationMap.astro";
+import { location, hours, contact, nav } from "../data/brunetta";
+---
+
+<section class="bg-black text-cream">
+  <div class="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center md:gap-16 md:px-8 md:py-28">
+    <div data-reveal>
+      <RevealHeadline text="Find us in McAllen" as="h2" class="text-4xl leading-[1.05] md:text-5xl" />
+      <p class="mt-6 text-cream/80">
+        {location.street}<br />
+        {location.city}, {location.state} {location.zip}
+      </p>
+      <p class="mt-2 text-sm text-cream/60">{location.landmark}</p>
+
+      <ul class="mt-6 space-y-1 text-sm">
+        {hours.displayGrouped.map((row) => (
+          <li class="flex gap-3">
+            <span class="text-cream/60">{row.label}</span>
+            <span>{row.value}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a
+          href={nav.primaryCta.href}
+          target="_blank"
+          rel="noopener"
+          class="rounded-sm bg-amber px-6 py-3 font-body text-sm font-semibold uppercase tracking-[0.12em] text-black hover:bg-amber-deep"
+        >
+          Make a Reservation
+        </a>
+        <a
+          href={`tel:${contact.phoneE164}`}
+          class="rounded-sm border border-cream/40 px-6 py-3 font-body text-sm font-semibold uppercase tracking-[0.12em] hover:border-amber hover:text-amber"
+        >
+          Call {contact.phone}
+        </a>
+        <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${location.street}, ${location.city}, ${location.state} ${location.zip}`)}`} target="_blank" rel="noopener" class="btn-outline">Get Directions</a>
+      </div>
+      <p class="mt-5 text-sm leading-relaxed text-cream/70">{contact.largePartyNote}</p>
+    </div>
+
+    <LocationMap />
+  </div>
+</section>

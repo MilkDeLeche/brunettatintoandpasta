@@ -1,0 +1,123 @@
+---
+/**
+ * Design 1 footer — structure ported verbatim from the Amrit Palace source
+ * (bordered LOCATIONS | HOURS panel, centred mark, CONTACT | NEWSLETTER panel,
+ * a five-column link grid with a spacer column, the oversized wordmark, and a
+ * three-part bottom bar). Content is Brunetta's: one McAllen location, real
+ * hours, real socials — no Ocala/Gainesville, gift cards, or template credit.
+ */
+import { business, contact, location, hours, social, nav, reservations } from "../data/brunetta";
+
+const year = 2026;
+---
+
+<footer class="footer bg-[var(--surface)] text-xl font-medium text-[var(--biege)]/85">
+  <div class="px-4 pb-5 pt-[42px] md:px-7 md:pt-16">
+    <!-- top: LOCATIONS | HOURS  ·  mark  ·  CONTACT | NEWSLETTER -->
+    <div class="mx-auto grid max-w-[116rem] grid-cols-1 gap-4 md:grid-cols-[1fr_0.5fr_1fr]">
+      <div class="border-y-2 border-[var(--biege)]/30">
+        <div class="flex flex-col sm:flex-row">
+          <div class="flex w-full flex-col items-center justify-between gap-6 border-b-2 border-[var(--biege)]/30 p-4 sm:h-64 sm:w-1/2 sm:border-b-0 sm:border-r-2">
+            <div class="text-lg uppercase tracking-[0.05em] text-[var(--biege)]/70">Location</div>
+            <div class="flex flex-col gap-1.5 text-center text-lg leading-[1.63rem]">
+              <div>
+                <div>{location.city}, {location.state}</div>
+                <div>{location.street}, {location.zip}</div>
+              </div>
+              <div class="text-[var(--biege)]/70">{location.landmark}</div>
+            </div>
+          </div>
+          <div class="flex w-full flex-col items-center justify-between gap-6 p-4 sm:h-64 sm:w-1/2">
+            <div class="text-lg uppercase tracking-[0.05em] text-[var(--biege)]/70">Hours</div>
+            <div class="text-center text-lg leading-[1.63rem]">
+              {hours.displayGrouped.map((row) => (
+                <div>{row.label}<br />{row.value}</div>
+              ))}
+              <div class="mt-2 text-[var(--biege)]/70">{contact.largePartyNote}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center py-6 md:py-0">
+        <a href="/design-1" aria-label={business.name} class="font-display text-3xl uppercase tracking-[-0.02em] text-[var(--primary)]">
+          {business.shortName}
+        </a>
+      </div>
+
+      <div class="border-y-2 border-[var(--biege)]/30">
+        <div class="grid grid-cols-2 sm:flex">
+          <div class="flex w-full flex-col items-center justify-between gap-6 border-r-2 border-[var(--biege)]/30 p-4 sm:h-64 sm:w-1/2">
+            <div class="text-lg uppercase tracking-[0.05em] text-[var(--biege)]/70">Contact</div>
+            <div class="flex flex-col gap-2 text-center text-lg leading-[1.63rem]">
+              <a href={`tel:${contact.phoneE164}`} class="text-xl hover:text-[var(--primary)]">{contact.phone}</a>
+              <a href={reservations.googleReserveUrl} target="_blank" rel="noopener" class="hover:text-[var(--primary)]">Reserve a Table</a>
+            </div>
+          </div>
+          <div class="flex w-full flex-col items-center justify-between gap-6 p-4 sm:h-64 sm:w-1/2">
+            <div class="text-lg uppercase tracking-[0.05em] text-[var(--biege)]/70">Newsletter</div>
+            <div class="text-center text-lg leading-[1.63rem]">
+              <div>Get the latest updates.</div>
+              <div class="text-[var(--biege)]/70">Coming soon&hellip;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- link grid: Discover | Legals | (spacer) | Actions | Socials -->
+    <div class="mx-auto mt-16 grid max-w-[116rem] grid-cols-2 items-start gap-4 text-center text-lg md:grid-cols-[1fr_1fr_1fr_1fr_1fr]">
+      <div>
+        <div class="text-[var(--biege)]">Discover</div>
+        <div class="mt-4 flex flex-col gap-1">
+          {nav.primary.map((item) => (
+            <a href={item.href} class="hover:text-[var(--primary)]">{item.label}</a>
+          ))}
+          <a href={nav.menu.href} class="hover:text-[var(--primary)]">Menu</a>
+        </div>
+      </div>
+      <div>
+        <div class="text-[var(--biege)]">Legals</div>
+        <div class="mt-4 flex flex-col gap-1">
+          <a href="/design-1/privacy" class="hover:text-[var(--primary)]">Privacy Policy</a>
+          <a href="/design-1/privacy" class="hover:text-[var(--primary)]">Terms &amp; Conditions</a>
+        </div>
+      </div>
+      <div class="hidden md:block"></div>
+      <div>
+        <div class="text-[var(--biege)]">Actions</div>
+        <div class="mt-4 flex flex-col gap-1">
+          <a href={nav.menu.href} class="hover:text-[var(--primary)]">View Menu</a>
+          <a href="/design-1/reviews" class="hover:text-[var(--primary)]">Post a Review</a>
+          <a href={reservations.googleReserveUrl} target="_blank" rel="noopener" class="hover:text-[var(--primary)]">Reserve a Table</a>
+        </div>
+      </div>
+      <div>
+        <div class="text-[var(--biege)]">Socials</div>
+        <div class="mt-4 flex flex-col gap-1">
+          <a href={social.instagram} target="_blank" rel="noopener" class="hover:text-[var(--primary)]">Instagram</a>
+          <a href={social.facebook} target="_blank" rel="noopener" class="hover:text-[var(--primary)]">Facebook</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- oversized wordmark -->
+    <div class="mx-auto mt-28 max-w-[116rem] pb-2 md:mt-56">
+      <div class="select-none overflow-hidden text-center uppercase leading-[0.8] tracking-[-4px] text-[var(--primary)] text-[clamp(2.5rem,14vw,16.5rem)]">
+        {business.shortName}
+      </div>
+    </div>
+
+    <!-- bottom bar -->
+    <div class="mx-auto mt-16 flex max-w-[116rem] flex-col items-center justify-between gap-3 text-center text-lg text-[var(--biege)]/60 sm:flex-row md:mt-20">
+      <div>&copy; <span id="footer-year">{year}</span> {business.name}</div>
+      <div>All Rights Reserved</div>
+      <div>{location.neighborhood.split(",")[0]}</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const el = document.getElementById("footer-year");
+  if (el) el.textContent = String(new Date().getFullYear());
+</script>

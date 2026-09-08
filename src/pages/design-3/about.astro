@@ -1,0 +1,38 @@
+---
+import Design3Layout from "../../layouts/Design3Layout.astro";
+import { about, business } from "../../data/brunetta";
+import { big, feature } from "../../data/photos";
+
+const RESERVE = "https://www.google.com/maps/reserve/v/dine/c/5H5kKRje0fU";
+---
+
+<Design3Layout title={`About — ${business.name}`} description={about.short} path="/design-3/about">
+  <section class="page-head">
+    <p class="eyebrow">Our Story</p>
+    <h1>{about.headline}</h1>
+    <p>{about.short}</p>
+  </section>
+
+  <div class="page-body">
+    <div class="split">
+      <img src={big(feature.wine)} alt="Cheese and charcuterie at Brunetta" loading="lazy" />
+      <div class="content-stack">
+        <p class="text-body" style="color:var(--color-gc-ink-soft)">{about.storyVerbatim}</p>
+        <a class="btn btn-black" href={RESERVE} target="_blank" rel="noopener">Reserve a table</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="background-yellow">
+    <div class="page-body">
+      <p class="eyebrow">What we believe in</p>
+      <div class="info-grid" style="margin-top:1rem">
+        {about.values.map((v) => (
+          <div class="info-card" style="border-color:#000">
+            <p class="big">{v}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Design3Layout>

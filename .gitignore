@@ -1,0 +1,34 @@
+# build output
+dist/
+.vercel/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+.npm-cache/
+
+# local editor / tooling
+.claude/
+
+# logs
+npm-debug.log*
+
+# environment variables
+.env
+.env.production
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# large local-only clone reference material (screenshots / screen recordings).
+# The text dumps (.txt/.html/.css/.md) stay tracked — the heavy media does not.
+assets/**/*.mp4
+assets/**/*.mov
+assets/**/*.png
+assets/**/*.jpg
+assets/**/*.jpeg
+assets/**/frames/

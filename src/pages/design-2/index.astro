@@ -1,0 +1,122 @@
+---
+import GustoLayout from "../../layouts/GustoLayout.astro";
+import Menu from "../../components/design2/Menu.astro";
+import Gallery from "../../components/design2/Gallery.astro";
+import LocationMap from "../../components/LocationMap.astro";
+import "../../styles/brunetta-gusto.css";
+import { business, contact, location, hours, social, reservations, reviews, blog, design2Content as copy } from "../../data/brunetta";
+import { big, thumb, feature, foodAll } from "../../data/photos";
+const heroPhoto = foodAll.find(photo => photo.name === feature.hero)!;
+const nav = [
+  { label: "About", href: "#about" }, { label: "Gallery", href: "#gallery" },
+  { label: "Menu", href: "#menu" }, { label: "Stories", href: "#blog" }, { label: "Visit", href: "#contacts" },
+];
+const address = `${location.street}, ${location.city}, ${location.state} ${location.zip}`;
+const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+const blogPhotos = ["DSC05501", "DSC09728", "DSC01349", "DSC09509"];
+---
+<GustoLayout title={`${business.name} — ${business.tagline}`} description={copy.heroDescription} brunetta>
+  <a class="d2-skip" href="#main">Skip to content</a>
+  <div class="gv-nav-wrap">
+    <nav class="gv-nav" aria-label="Primary">
+      <a href="/design-2" class="gv-logo" aria-label={business.name}>{business.shortName}<small>Tinto &amp; Pasta</small></a>
+      <div class="gv-nav__right">
+        <div class="gv-nav__links">{nav.map(item => <a href={item.href}>{item.label}</a>)}</div>
+        <details class="gv-mobile-nav">
+          <summary aria-label="Open navigation"><span>Explore</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></summary>
+          <nav aria-label="Mobile navigation">{nav.map(item => <a href={item.href}>{item.label}</a>)}<a href={`tel:${contact.phoneE164}`}>Call {contact.phone}</a></nav>
+        </details>
+        <a class="gv-btn" href={reservations.googleReserveUrl} target="_blank" rel="noopener">Reserve <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </div>
+  <header class="gv-hero">
+    <div class="gv-hero__media">
+      <img src={heroPhoto.src} alt={heroPhoto.alt} width="1600" height="1066" fetchpriority="high" decoding="async" />
+      <div class="gv-hero__fade"></div>
+    </div>
+    <div class="gv-hero__content">
+      <div>
+        <p class="gv-eyebrow">{location.city}, Texas</p>
+        <h1>Discover <em>Authentic</em> Italian <em>Fine</em> Dining</h1>
+        <p class="gv-hero__sub">{copy.heroDescription}</p>
+        <div class="gv-hero__ctas">
+          <a class="gv-btn gv-btn--light" href={reservations.googleReserveUrl} target="_blank" rel="noopener">Make a Reservation <span aria-hidden="true">↗</span></a>
+          <a class="gv-btn gv-btn--ghost" href="#menu">View Menu <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <div class="gv-hero__meta">
+        <a href={directions} target="_blank" rel="noopener">{location.street}<br />{location.city}, {location.state} {location.zip} <span aria-hidden="true">↗</span></a>
+        <a href={`tel:${contact.phoneE164}`}>{contact.phone}</a>
+      </div>
+    </div>
+  </header>
+  <main id="main">
+    <section id="about" class="gv-section">
+      <div class="gv-section__head"><p class="gv-eyebrow">About Brunetta</p><h2>{copy.aboutTitle}</h2></div>
+      <p class="gv-about-copy">{copy.aboutDescription}</p>
+    </section>
+    <section id="gallery" class="gv-section gv-section--wide">
+      <div class="gv-section__head"><h2>{copy.galleryTitle}</h2></div>
+      <Gallery />
+    </section>
+    <section id="menu" class="gv-section gv-section--tint">
+      <div class="gv-section__head"><p class="gv-eyebrow">The Menu</p><h2>{copy.menuTitle}</h2><p>{copy.menuDescription}</p></div>
+      <Menu />
+    </section>
+    {reviews.approvedTestimonials.length > 0 && <section class="gv-section d2-reviews" aria-label="Guest reviews">
+      {reviews.approvedTestimonials.map(review => <figure><blockquote>{review.quote}</blockquote><figcaption>{review.name}, {review.source}</figcaption></figure>)}
+    </section>}
+    <section id="blog" class="gv-section">
+      <div class="gv-section__head"><p class="gv-eyebrow">Stories</p><h2>{copy.blogTitle}</h2><p>{copy.blogDescription}</p></div>
+      <div class="d2-stories">
+        {blog.map((post, index) => <article class="d2-story">
+          <img src={thumb(blogPhotos[index])} alt={foodAll.find(photo => photo.name === blogPhotos[index])!.alt} width="640" height="426" loading="lazy" decoding="async" />
+          <div>
+            {post.date !== "UNCONFIRMED" && <p class="d2-story__date"><time datetime={post.date}>{post.date}</time></p>}
+            <h3>{post.title}</h3><p>{post.excerpt}</p>
+            <details><summary>Read story <span aria-hidden="true">+</span></summary><div class="d2-story__body">{post.body?.map(paragraph => <p>{paragraph}</p>)}</div></details>
+          </div>
+        </article>)}
+      </div>
+    </section>
+    <section id="contacts" class="gv-section gv-section--tint">
+      <div class="gv-section__head"><p class="gv-eyebrow">Visit Brunetta</p><h2>{copy.visitTitle}</h2></div>
+      <div class="d2-visit">
+        <div>
+          <address>{location.street}<br />{location.city}, {location.state} {location.zip}</address>
+          <p class="d2-visit__landmark">{location.landmark}</p>
+          <dl>{hours.displayGrouped.map(row => <div><dt>{row.label}</dt><dd>{row.value}</dd></div>)}</dl>
+          <p><a class="d2-phone" href={`tel:${contact.phoneE164}`}>{contact.phone}</a></p>
+          <p>{contact.largePartyNote}</p>
+          <div class="d2-visit__actions"><a class="gv-btn" href={reservations.googleReserveUrl} target="_blank" rel="noopener">Make a Reservation ↗</a><a class="gv-link-underline" href={directions} target="_blank" rel="noopener">Get Directions ↗</a></div>
+        </div>
+        <LocationMap />
+      </div>
+    </section>
+  </main>
+  <footer class="gv-footer">
+    <a href="/design-2" class="gv-logo" aria-label={business.name}>{business.shortName}<small>Tinto &amp; Pasta</small></a>
+    <nav aria-label="Social links"><a href={social.instagram} target="_blank" rel="noopener">Instagram ↗</a><a href={social.facebook} target="_blank" rel="noopener">Facebook ↗</a></nav>
+    <p class="gv-footer__copy">&copy; {new Date().getFullYear()} {business.name}. <a href="/design-1/privacy">Privacy</a> · <a href="/">All concepts</a></p>
+  </footer>
+  <script>
+    const mobileNav = document.querySelector<HTMLDetailsElement>(".gv-mobile-nav")!;
+    const summary = mobileNav.querySelector("summary")!;
+    const closeNav = () => { mobileNav.open = false; };
+    mobileNav.querySelectorAll<HTMLAnchorElement>("a").forEach(link => link.addEventListener("click", event => {
+      closeNav();
+      if (link.hash) {
+        event.preventDefault();
+        window.location.hash = link.hash;
+        const heading = document.querySelector<HTMLElement>(`${link.hash} h2`);
+        if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+      }
+    }));
+    mobileNav.addEventListener("keydown", event => { if (event.key === "Escape") { closeNav(); summary.focus(); } });
+    document.addEventListener("click", event => { if (event.target instanceof Node && !mobileNav.contains(event.target)) closeNav(); });
+    mobileNav.addEventListener("focusout", () => { requestAnimationFrame(() => { if (!mobileNav.contains(document.activeElement)) closeNav(); }); });
+    const desktop = matchMedia("(min-width: 901px)");
+    desktop.addEventListener("change", event => { if (event.matches) closeNav(); });
+  </script>
+</GustoLayout>

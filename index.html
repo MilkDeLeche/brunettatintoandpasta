@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Four complete website design directions for Brunetta Tinto & Pasta, presented by Mo$ Entertainment. Explore each and choose the one that fits.">
+  <title>Brunetta Tinto &amp; Pasta — Choose a Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#174f5a; --muted:#42656a; --cream:#eae3de; --paper:#f3eee6; --line:#acbbb7; --seal:#8c4238; --display:Newsreader,Georgia,serif; --body:"Source Sans 3","Helvetica Neue",Arial,sans-serif; }
+    *,*::before,*::after { box-sizing:border-box; }
+    html { -webkit-text-size-adjust:100%; }
+    html,body { margin:0; min-height:100%; overflow-x:hidden; background:var(--cream); }
+    body { color:var(--ink); font-family:var(--body); -webkit-font-smoothing:antialiased; }
+    a { color:inherit; text-decoration:none; }
+    a:focus-visible { outline:3px solid var(--ink); outline-offset:4px; }
+    /* Fills the viewport when the content fits; scrolls gracefully when it doesn't
+       (short landscape phones, large text-zoom, long translations). */
+    .picker-page { position:relative; isolation:isolate; min-height:100vh; min-height:100svh; min-height:100dvh; padding:clamp(20px,4vh,44px) max(clamp(20px,4vw,64px),env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(clamp(20px,4vw,64px),env(safe-area-inset-left)); display:flex; flex-direction:column; }
+    .landscape { position:fixed; inset:0; z-index:-1; pointer-events:none; background:var(--cream); }
+    .landscape video { width:100%; height:100%; object-fit:cover; object-position:center bottom; animation:fade-in 1.2s ease both; }
+    .agency { width:min(1120px,100%); margin-inline:auto; display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,6vw,88px); align-items:center; padding:20px 24px; background:var(--cream); }
+    .brand-lockup { display:flex; gap:18px; align-items:center; }
+    .agency-logo { width:88px; height:60px; flex-shrink:0; background:var(--ink); display:grid; place-items:center; border:1px solid var(--ink); }
+    .agency-logo img { display:block; width:80px; height:54px; object-fit:contain; filter:grayscale(1) contrast(3); mix-blend-mode:screen; }
+    .brand-name { font:500 clamp(24px,2.3vw,34px)/1.08 var(--display); letter-spacing:-.03em; margin:0; }
+    .brand-category { font-size:11px; line-height:1.4; letter-spacing:.13em; text-transform:uppercase; margin:7px 0 0; }
+    .agency-headline { font:400 clamp(30px,3.3vw,48px)/1.04 var(--display); letter-spacing:-.035em; margin:22px 0 0; text-wrap:balance; max-width:19ch; }
+    .agency-description { font-size:16px; line-height:1.5; color:var(--muted); margin:0; max-width:52ch; }
+    .services { list-style:none; margin:18px 0 0; padding:14px 0 0; display:grid; grid-template-columns:1fr 1fr; gap:7px 20px; border-top:1px solid var(--line); font-size:14px; line-height:1.35; }
+    .services li { display:flex; gap:8px; align-items:baseline; }
+    .services li::before { content:"·"; color:var(--seal); font-weight:600; }
+    .design-picker { width:min(1080px,100%); margin:auto auto 0; padding-top:24px; }
+    .picker-heading { display:flex; align-items:center; justify-content:center; margin:0 0 16px; }
+    .picker-heading h2 { margin:0; padding:9px 20px; background:var(--paper); font:400 24px/1.1 var(--display); letter-spacing:-.015em; text-align:center; }
+    .design-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
+    .design-card { display:flex; flex-direction:column; min-width:0; background:var(--paper); border:1px solid var(--line); padding:18px 20px 14px; box-shadow:0 3px 0 #d4dbd3; transition:border-color .2s ease,transform .2s ease; animation:rise-in .65s cubic-bezier(.22,1,.36,1) var(--delay,.1s) both; }
+    .card-top { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .card-label { font-size:11px; line-height:1; text-transform:uppercase; letter-spacing:.14em; }
+    .card-number { display:grid; place-items:center; width:28px; height:28px; flex-shrink:0; border:1px solid var(--seal); color:var(--seal); font:500 15px/1 var(--display); }
+    .card-title { font:400 clamp(25px,2.2vw,32px)/1.02 var(--display); letter-spacing:-.025em; margin:15px 0 9px; }
+    .card-tags { font-size:13px; line-height:1.45; color:var(--muted); margin:0 0 16px; }
+    .card-action { display:flex; align-items:center; justify-content:space-between; gap:8px; border-top:1px solid var(--line); margin-top:auto; padding-top:11px; font-size:13px; font-weight:600; line-height:1.2; }
+    .card-action svg { width:22px; height:22px; flex-shrink:0; transition:transform .2s ease; }
+    .design-card:hover { border-color:var(--ink); transform:translateY(-3px); }
+    .design-card:hover .card-action svg { transform:translateX(3px); }
+    .picker-credit { width:fit-content; max-width:100%; margin:14px auto 0; padding:5px 12px; text-align:center; color:var(--muted); background:var(--paper); font-size:11px; line-height:1.2; }
+    @keyframes rise-in { from { opacity:0; transform:translate3d(0,10px,0); } to { opacity:1; transform:translate3d(0,0,0); } }
+    @keyframes fade-in { from { opacity:0; } to { opacity:1; } }
+    @media (max-width:1100px) {
+      .agency { gap:28px; padding:16px 20px; }
+      .agency-logo { width:72px; height:50px; }
+      .agency-logo img { width:66px; height:44px; }
+      .brand-lockup { gap:12px; }
+      .agency-description { font-size:15px; }
+      .services { font-size:13px; gap:7px 12px; }
+      .design-grid { gap:12px; }
+      .design-card { padding:16px 15px 12px; }
+      .card-tags { font-size:12px; }
+      .landscape video { object-fit:contain; object-position:center center; }
+    }
+    @media (max-width:720px) {
+      .picker-page { padding:16px max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left)); }
+      .agency { padding:12px 14px; grid-template-columns:1fr; gap:12px; }
+      .agency-logo { width:60px; height:40px; }
+      .agency-logo img { width:54px; height:36px; }
+      .brand-name { font-size:27px; }
+      .brand-category { font-size:9px; margin-top:4px; letter-spacing:.1em; }
+      .agency-headline { max-width:none; font-size:30px; margin-top:13px; }
+      .agency-description { font-size:14px; line-height:1.4; max-width:none; }
+      .services { margin-top:10px; padding-top:9px; font-size:12px; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px 8px; }
+      .services li { display:block; }
+      .services li::before { content:none; }
+      .design-picker { padding-top:18px; }
+      .picker-heading { margin-bottom:10px; }
+      .picker-heading h2 { font-size:21px; padding:7px 12px; }
+      .design-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+      .design-card { padding:12px 14px 10px; }
+      .card-label { font-size:10px; letter-spacing:.1em; }
+      .card-number { width:23px; height:23px; font-size:13px; }
+      .card-title { font-size:26px; margin:10px 0 7px; }
+      .card-tags { font-size:12px; line-height:1.3; margin-bottom:10px; }
+      .card-action { font-size:12px; padding-top:8px; }
+      .card-action svg { width:18px; height:18px; }
+      .picker-credit { margin-top:12px; font-size:10px; }
+    }
+    @media (max-width:440px) {
+      .agency-headline { font-size:27px; }
+      .agency-description { font-size:13px; }
+      .card-title { font-size:24px; }
+      .design-card { padding-inline:12px; }
+    }
+    @media (max-height:740px) and (max-width:720px) {
+      .picker-page { padding:10px 12px; }
+      .agency { padding:8px 10px; gap:8px; }
+      .agency-logo { width:49px; height:33px; }
+      .agency-logo img { width:45px; height:30px; }
+      .brand-name { font-size:24px; }
+      .agency-headline { font-size:24px; margin-top:9px; }
+      .agency-description { font-size:12px; line-height:1.35; }
+      .services { font-size:11px; gap:4px 8px; margin-top:7px; padding-top:7px; }
+      .design-picker { padding-top:10px; }
+      .picker-heading { margin-bottom:8px; }
+      .picker-heading h2 { font-size:19px; padding:5px 10px; }
+      .design-grid { gap:9px; }
+      .design-card { padding:9px 11px; }
+      .card-number { width:20px; height:20px; font-size:12px; }
+      .card-title { font-size:22px; margin:7px 0 5px; }
+      .card-tags { font-size:11px; margin-bottom:7px; }
+      .card-action { font-size:11px; padding-top:6px; }
+      .picker-credit { margin-top:9px; font-size:9px; }
+    }
+    @media (max-height:580px) and (min-width:721px) {
+      .picker-page { padding-block:12px; }
+      .agency { padding:10px 16px; gap:24px; }
+      .agency-headline { font-size:28px; margin-top:10px; }
+      .agency-description { font-size:13px; }
+      .services { margin-top:8px; padding-top:8px; font-size:12px; gap:4px 10px; }
+      .design-picker { padding-top:12px; }
+      .picker-heading { margin-bottom:8px; }
+      .picker-heading h2 { font-size:20px; padding:5px 10px; }
+      .design-card { padding:10px 12px; }
+      .card-title { font-size:24px; margin:8px 0 6px; }
+      .card-tags { margin-bottom:8px; font-size:11px; }
+      .card-number { width:22px; height:22px; }
+      .card-action { padding-top:7px; font-size:12px; }
+      .picker-credit { margin-top:10px; }
+    }
+    @media (max-height:450px) and (min-width:560px) and (max-width:720px) {
+      .agency { grid-template-columns:1fr 1.2fr; gap:18px; }
+      .brand-name { font-size:21px; }
+      .brand-category { font-size:8px; }
+      .agency-headline { font-size:23px; }
+      .agency-description { font-size:11px; }
+      .services { font-size:10px; }
+      .design-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+      .design-card { padding:8px; }
+      .card-title { font-size:21px; }
+      .card-tags { font-size:10px; }
+      .card-label { font-size:9px; }
+      .card-action { font-size:10px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .landscape video { display:none; }
+      .landscape { background:var(--cream) url("/img/picker-bg-poster.webp") center bottom / cover no-repeat; }
+      .design-card { animation:none; }
+      .design-card,.card-action svg { transition:none; }
+      .design-card:hover,.design-card:hover .card-action svg { transform:none; }
+    }
+    @media (prefers-reduced-motion:reduce) and (max-width:1100px) { .landscape { background-size:contain; background-position:center; } }
+  </style>
+</head>
+<body>
+  <main class="picker-page">
+    <div class="landscape" aria-hidden="true">
+      <video autoplay muted loop playsinline preload="auto" poster="/img/picker-bg-poster.webp">
+        <source src="/img/picker-bg.mp4" type="video/mp4">
+        <source src="/img/picker-bg.webm" type="video/webm">
+      </video>
+    </div>
+    <header class="agency">
+      <div class="agency-brand">
+        <div class="brand-lockup">
+          <div class="agency-logo"><img src="/img/mos-wordmark.webp" alt="Mo$ Entertainment" width="1100" height="734"></div>
+          <div>
+            <h1 class="brand-name">Brunetta Tinto &amp; Pasta</h1>
+            <p class="brand-category">Website concepts · Mo$ Entertainment</p>
+          </div>
+        </div>
+        <h2 class="agency-headline">Four ways to bring Brunetta online.</h2>
+      </div>
+      <div class="agency-copy">
+        <p class="agency-description">Each direction is a complete, working website — the same story, menu and details, told four different ways. Explore every one, then choose the design that feels most like Brunetta Tinto &amp; Pasta.</p>
+        <ul class="services" aria-label="What we handle">
+          <li>Brand &amp; identity</li><li>Web design &amp; build</li><li>Photography &amp; video</li><li>Content &amp; social</li><li>SEO &amp; local search</li><li>Paid campaigns</li>
+        </ul>
+      </div>
+    </header>
+    <section class="design-picker" aria-labelledby="picker-heading">
+      <div class="picker-heading"><h2 id="picker-heading">Four directions. Find your expression.</h2></div>
+      <nav class="design-grid" aria-label="Website design options">
+        <a class="design-card" href="/design-1/" aria-label="View Design 01 — Elegant and timeless" style="--delay:.08s">
+          <div class="card-top"><span class="card-label">Design 01</span><span class="card-number" aria-hidden="true">01</span></div>
+          <h3 class="card-title">Elegant &amp;<br>timeless</h3>
+          <p class="card-tags">Refined · Editorial · Immersive</p>
+          <span class="card-action">Explore design <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="design-card" href="/design-2/" aria-label="View Design 02 — Modern and minimal" style="--delay:.16s">
+          <div class="card-top"><span class="card-label">Design 02</span><span class="card-number" aria-hidden="true">02</span></div>
+          <h3 class="card-title">Modern &amp;<br>minimal</h3>
+          <p class="card-tags">Airy · Clean · Understated</p>
+          <span class="card-action">Explore design <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="design-card" href="/design-3/" aria-label="View Design 03 — Bold and expressive" style="--delay:.24s">
+          <div class="card-top"><span class="card-label">Design 03</span><span class="card-number" aria-hidden="true">03</span></div>
+          <h3 class="card-title">Bold &amp;<br>expressive</h3>
+          <p class="card-tags">Golden · Playful · Confident</p>
+          <span class="card-action">Explore design <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="design-card" href="/design-4/" aria-label="View Design 04 — Warm and welcoming" style="--delay:.32s">
+          <div class="card-top"><span class="card-label">Design 04</span><span class="card-number" aria-hidden="true">04</span></div>
+          <h3 class="card-title">Warm &amp;<br>welcoming</h3>
+          <p class="card-tags">Friendly · Vibrant · Approachable</p>
+          <span class="card-action">Explore design <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </nav>
+      <p class="picker-credit">Brunetta Tinto &amp; Pasta · Website concepts by Mo$ Entertainment · Powered by Timeless Media</p>
+    </section>
+  </main>
+</body>
+</html>

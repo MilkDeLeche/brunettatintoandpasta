@@ -1,0 +1,259 @@
+---
+import GustoLayout from "../../../layouts/GustoLayout.astro";
+import { gusto as g } from "../../../data/gusto";
+
+const reviewLoop = [...g.reviews.items, ...g.reviews.items];
+---
+
+<GustoLayout>
+  <div class="gv-nav-wrap">
+    <nav class="gv-nav" aria-label="Primary">
+      <div class="gv-nav__left">
+        <a href="/design-2/template" class="gv-logo">{g.name}</a>
+        <div class="gv-nav__socials">
+          {g.socials.map((s) => <a href={s.href}>{s.label.slice(0, 2)}</a>)}
+        </div>
+      </div>
+      <div class="gv-nav__right">
+        <div class="gv-nav__links">
+          {g.nav.map((item) => <a href={item.href}>{item.label}</a>)}
+          <span class="gv-eyebrow" aria-hidden="true">EN</span>
+        </div>
+        <a class="gv-btn" href="https://www.framer.com/marketplace/templates/gusto-verde/" target="_blank" rel="noopener">
+          {g.ctaTemplate}
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <header class="gv-hero">
+    <div class="gv-hero__media">
+      {
+        g.hero.images.map((src, i) => (
+          <img data-hero-slide src={src} alt="" style={i === 0 ? undefined : "position:absolute;inset:0;opacity:0"} />
+        ))
+      }
+      <div class="gv-hero__fade"></div>
+    </div>
+    <div class="gv-hero__content">
+      <div data-reveal>
+        <p class="gv-eyebrow">{g.hero.eyebrow}</p>
+        <h1>
+          {g.hero.titleBefore}{" "}
+          <em>{g.hero.titleItalic1}</em>{" "}
+          {g.hero.titleMid}{" "}
+          <em>{g.hero.titleItalic2}</em>{" "}
+          {g.hero.titleAfter}
+        </h1>
+        <p class="gv-hero__sub">{g.hero.sub}</p>
+        <div class="gv-hero__ctas">
+          <a class="gv-btn gv-btn--light" href="#contacts">{g.hero.ctaPrimary}</a>
+          <a class="gv-btn gv-btn--ghost" href="#menu">{g.hero.ctaSecondary}</a>
+        </div>
+      </div>
+      <div class="gv-hero__meta" data-reveal>
+        <p>{g.address}</p>
+        <p>{g.hours}</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="about" class="gv-section">
+      <div class="gv-section__head" data-reveal>
+        <p class="gv-eyebrow">{g.about.eyebrow}</p>
+      </div>
+      <p class="gv-about-copy" data-reveal>{g.about.body}</p>
+      <div class="gv-amenities">
+        {
+          g.about.amenities.map((label) => (
+            <div class="gv-amenity" data-reveal>
+              <div class="gv-amenity__icon" aria-hidden="true">○</div>
+              <span>{label}</span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <div class="gv-ornament" aria-hidden="true"></div>
+
+    <section class="gv-section gv-section--wide">
+      <div class="gv-gallery">
+        {
+          g.gallery.images.map((src) =>
+            src ? (
+              <div class="gv-gallery__cell" data-reveal>
+                <img src={src} alt="" loading="lazy" />
+              </div>
+            ) : (
+              <div class="gv-gallery__cell" data-reveal aria-hidden="true" />
+            )
+          )
+        }
+      </div>
+      <p style="text-align:center;margin-top:2rem" data-reveal>
+        <a class="gv-link-underline" href="#">{g.gallery.seeAll}</a>
+      </p>
+    </section>
+
+    <div class="gv-ornament" aria-hidden="true"></div>
+
+    <section id="menu" class="gv-section gv-section--tint">
+      <div class="gv-section__head" data-reveal>
+        <p class="gv-eyebrow">{g.menu.eyebrow}</p>
+        <h2>
+          {g.menu.titleBefore} <em>{g.menu.titleItalic}</em> {g.menu.titleAfter}
+        </h2>
+      </div>
+      <div class="gv-tabs" role="tablist" aria-label="Menu categories">
+        {
+          g.menu.tabs.map((tab, i) => (
+            <button type="button" data-menu-tab class:list={[i === 0 && "is-active"]}>
+              {tab}
+            </button>
+          ))
+        }
+      </div>
+      <div class="gv-dishes">
+        {
+          g.menu.items.map((item) => (
+            <article class="gv-dish" data-reveal>
+              <img src={item.image} alt="" loading="lazy" />
+              <div>
+                <h3 class="gv-dish__name">{item.name}</h3>
+                <p class="gv-dish__desc">{item.desc}</p>
+                {item.badge && <span class="gv-badge">{item.badge}</span>}
+              </div>
+              <span class="gv-dish__price">{item.price}</span>
+            </article>
+          ))
+        }
+      </div>
+      <p style="text-align:center;margin-top:2rem" data-reveal>
+        <a class="gv-link-underline" href="#">{g.menu.seeAll}</a>
+      </p>
+    </section>
+
+    <section class="gv-gift">
+      <div class="gv-gift__img" data-reveal>
+        <img src={g.gift.image} alt="" loading="lazy" />
+      </div>
+      <div class="gv-gift__copy" data-reveal>
+        <p class="gv-eyebrow">{g.gift.eyebrow}</p>
+        <h3>
+          {g.gift.titleBefore} <em>{g.gift.titleItalic}</em>
+        </h3>
+        <p style="margin:0;color:var(--gv-black-40);font-size:1.15rem">{g.gift.body}</p>
+        <a class="gv-btn" href="#">{g.gift.cta}</a>
+      </div>
+    </section>
+
+    <section id="team" class="gv-section gv-section--tint">
+      <div class="gv-section__head" data-reveal>
+        <p class="gv-eyebrow">{g.team.eyebrow}</p>
+        <h2>
+          {g.team.titleBefore} <em>{g.team.titleItalic}</em>
+        </h2>
+        <p>{g.team.sub}</p>
+      </div>
+      <div class="gv-team-grid">
+        {
+          g.team.members.map((m) => (
+            <article class="gv-card" data-reveal>
+              <img src={m.image} alt={m.name} loading="lazy" />
+              <p class="gv-card__role">{m.role}</p>
+              <h3>{m.name}</h3>
+              <p>{m.bio}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="gv-section gv-reviews">
+      <div class="gv-section__head" data-reveal>
+        <p class="gv-eyebrow">{g.reviews.eyebrow}</p>
+      </div>
+      <div class="gv-reviews__track" aria-label="Reviews">
+        {
+          reviewLoop.map((r) => (
+            <figure class="gv-review">
+              <div class="gv-review__stars" aria-hidden="true">★★★★★</div>
+              <blockquote>“{r.quote}”</blockquote>
+              <cite>— {r.name}</cite>
+            </figure>
+          ))
+        }
+      </div>
+    </section>
+
+    <section id="blog" class="gv-section gv-section--tint">
+      <div class="gv-section__head" data-reveal>
+        <p class="gv-eyebrow">{g.blog.eyebrow}</p>
+        <h2>
+          {g.blog.titleBefore} <em>{g.blog.titleItalic}</em>
+        </h2>
+        <p>{g.blog.sub}</p>
+      </div>
+      <div class="gv-blog-grid">
+        {
+          g.blog.posts.map((post) => (
+            <article class="gv-post" data-reveal>
+              <img src={post.image} alt="" loading="lazy" />
+              <div>
+                <p class="gv-post__date">{post.date}</p>
+                <h3>{post.title}</h3>
+                <p>{post.excerpt}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+      <p style="text-align:center;margin-top:2rem" data-reveal>
+        <a class="gv-link-underline" href="#">{g.blog.seeAll}</a>
+      </p>
+    </section>
+
+    <section id="contacts" class="gv-section">
+      <div class="gv-section__head" data-reveal>
+        <p class="gv-eyebrow">{g.contacts.eyebrow}</p>
+        <h2>
+          {g.contacts.titleBefore} <em>{g.contacts.titleItalic1}</em>{" "}
+          {g.contacts.titleMid} <em>{g.contacts.titleItalic2}</em>{" "}
+          {g.contacts.titleAfter}
+        </h2>
+      </div>
+      <div class="gv-contacts">
+        <form class="gv-form" data-reveal>
+          <label>
+            Name
+            <input type="text" name="name" autocomplete="name" />
+          </label>
+          <label>
+            Message
+            <textarea name="message"></textarea>
+          </label>
+          <button class="gv-btn" type="submit">{g.contacts.submit}</button>
+        </form>
+        <div class="gv-info" data-reveal>
+          <p class="gv-eyebrow">Contact Info</p>
+          <p>{g.address}</p>
+          <p>{g.hours}</p>
+          <p><a href={`tel:${g.phoneTel}`}>{g.phone}</a></p>
+          <p><a href={`mailto:${g.email}`}>{g.email}</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="gv-ornament" aria-hidden="true"></div>
+
+  <footer class="gv-footer">
+    <a href="/design-2/template" class="gv-logo">{g.name}</a>
+    <div class="gv-nav__socials">
+      {g.socials.map((s) => <a href={s.href}>{s.label}</a>)}
+    </div>
+    <p class="gv-footer__copy">{g.footer.copyright}</p>
+  </footer>
+</GustoLayout>

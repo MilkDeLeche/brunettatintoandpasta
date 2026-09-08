@@ -1,0 +1,30 @@
+---
+// Design-2-specific placeholder art — light/paper aesthetic to match Gusto
+// Verde's monochrome editorial look (Design 1's dark-gradient PlaceholderImage
+// would clash here). Uses inline styles only, not Tailwind utilities tied to
+// either design's @theme tokens, so it's safe regardless of which stylesheet
+// the page loaded. Dimension-exact so real photography can drop in later.
+interface Props {
+  label: string;
+  aspect?: string;
+  class?: string;
+}
+const { label, aspect = "4/3", class: className = "" } = Astro.props;
+---
+
+<div
+  class={className}
+  style={`position:relative; overflow:hidden; aspect-ratio:${aspect}; background:linear-gradient(155deg,#f4f2ee,#e6e3db); border:1px solid #e2e0da;`}
+  role="img"
+  aria-label={label}
+>
+  <div
+    style="position:absolute; inset:0; opacity:0.5; background-image:repeating-linear-gradient(45deg,#00000008 0,#00000008 1px,transparent 1px,transparent 7px)"
+  >
+  </div>
+  <div style="position:absolute; inset:0; display:flex; align-items:flex-end; padding:0.75rem;">
+    <span style="font-family:Arial,sans-serif; font-size:10px; text-transform:uppercase; letter-spacing:0.14em; color:#8a8578;">
+      {label}
+    </span>
+  </div>
+</div>

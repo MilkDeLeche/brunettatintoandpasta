@@ -1,0 +1,240 @@
+---
+/**
+ * Design 3 — "Golden Child" clone, rendered from a content object so the same
+ * structure serves both the Phase A clone (`golden`, /design-3/template) and
+ * the Phase B rebrand (`brunettaOnGolden`, /design-3).
+ *
+ * Section structure follows the fetched source
+ * (assets/reference_2/template/body-full.txt): floating glass header, a
+ * full-bleed light hero, the "Golden Touch" splash, a yellow bowl carousel,
+ * a UGC carousel, a black press row, a white two-panel, the "daily duo"
+ * breakout tiles, a black closing hero, and the striped yellow footer with a
+ * giant wordmark + marquee. CSS values are in design3.css.
+ */
+import "../../styles/design3.css";
+import ConceptSwitcher from "../ConceptSwitcher.astro";
+
+interface Link { label: string; href: string }
+interface Props {
+  content: {
+    name: string;
+    home: string;
+    navLeft: readonly Link[];
+    navCta: Link;
+    hero: { image: string; title: string; sub: string; cta: Link; seals: readonly string[] };
+    splash: { eyebrow: string; title: string; body: string; cta: Link; image: string };
+    bowls: { eyebrow: string; title: string; body: string; cards: readonly (readonly [string, string, string])[] };
+    ugc: { eyebrow: string; title: string; images: readonly string[] };
+    press: readonly string[];
+    nutrition: {
+      eyebrow?: string; title: string; body: string; image: string;
+      checks: readonly string[]; imageRight: string; cta: Link; seals?: readonly string[];
+    };
+    duo: { eyebrow: string; title: string; body: string; left: string; right: string; cta1: Link; cta2: Link };
+    close: { image: string; eyebrow: string; title: string; cta: Link };
+    footer: { cols: readonly { title: string; links: readonly (readonly [string, string])[] }[]; copy: string; word: string; marquee: string };
+  };
+}
+const { content: c } = Astro.props;
+const isTemplate = c.name === "Golden Child";
+const marqueeText = `${c.footer.marquee} · `;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{isTemplate ? "Golden Child — fresh dog food" : "Brunetta Tinto & Pasta — Authentic Italian Fine Dining"}</title>
+  <meta name="robots" content={isTemplate ? "noindex" : "index,follow"} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap" />
+</head>
+<body>
+<div class="d3">
+  <!-- HEADER -->
+  <header class="gc-header">
+    <div class="header-panel">
+      <div class="header-panel-glass"></div>
+      <div class="header-row">
+        <ul class="desktop-nav-list">
+          {c.navLeft.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+        <a class="gc-logo" href={c.home} aria-label={c.name}>{c.name}</a>
+        <div class="header-actions">
+          <a class="btn btn-black text-body-sm" href={c.navCta.href}>{c.navCta.label}</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO (light) -->
+    <section class="section hero hero--light background-beige">
+      <div class="hero__media"><img src={c.hero.image} alt="" fetchpriority="high" /></div>
+      <div class="hero__scrim"></div>
+      <div class="hero__inner">
+        <div class="hero__copy" style="color:#fff">
+          <h1 class="text-h1 text-balance">{c.hero.title}</h1>
+          <p class="text-body-lg text-balance">{c.hero.sub}</p>
+          <a class="btn btn-black" href={c.hero.cta.href}>{c.hero.cta.label}</a>
+        </div>
+      </div>
+      <div class="hero__seals">
+        {c.hero.seals.map((s) => <span>{s}</span>)}
+      </div>
+    </section>
+
+    <!-- SPLASH -->
+    <section class="section splash section-gutter">
+      <div class="section-inner splash__grid">
+        <div class="splash__copy">
+          <p class="text-h4">{c.splash.eyebrow}</p>
+          <h2 class="text-h1 font-display">{c.splash.title}</h2>
+          <p class="rich-text-narrow text-body-sm">{c.splash.body}</p>
+          <a class="btn btn-black" href={c.splash.cta.href}>{c.splash.cta.label}</a>
+        </div>
+        <img class="splash__photo" src={c.splash.image} alt="" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- BOWL CAROUSEL -->
+    <section class="section center background-yellow section-gutter-y">
+      <div class="section-inner section-gutter-x center__head">
+        <p class="text-h4">{c.bowls.eyebrow}</p>
+        <h2 class="text-h1 font-display">{c.bowls.title}</h2>
+        <p class="text-body text-balance">{c.bowls.body}</p>
+      </div>
+      <div class="section-inner carousel">
+        {
+          c.bowls.cards.map(([title, meta, img]) => {
+            const parts = meta.split(" · ");
+            return (
+              <article class="bowl-card">
+                <img src={img} alt={title} loading="lazy" />
+                <div class="bowl-card__overlay">
+                  <h3>{title}</h3>
+                  <div class="bowl-card__meta">
+                    {parts.map((p) => {
+                      const [k, ...rest] = p.split(" ");
+                      return (
+                        <div><span class="k">{k}</span> <span>{rest.join(" ")}</span></div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <!-- UGC CAROUSEL -->
+    <section class="section center ugc background-off-white section-gutter-y">
+      <div class="section-inner section-gutter-x center__head">
+        <p class="text-h4">{c.ugc.eyebrow}</p>
+        <h2 class="text-h1 font-display">{c.ugc.title}</h2>
+      </div>
+      <div class="section-inner carousel">
+        {c.ugc.images.map((src) => (
+          <figure class="ugc-card"><img src={src} alt="" loading="lazy" /></figure>
+        ))}
+      </div>
+    </section>
+
+    <!-- PRESS -->
+    <section class="section press background-black section-gutter">
+      <div class="section-inner">
+        <p class="text-h4">As Seen In</p>
+        <ul class="press__logos">
+          {c.press.map((name) => <li>{name}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <!-- TWO-PANEL -->
+    <section class="section two-panel section-gutter">
+      <div class="section-inner two-panel__grid">
+        <article class="panel">
+          <img src={c.nutrition.image} alt="" loading="lazy" />
+          <div class="panel__scrim"></div>
+          <div class="panel__body">
+            {c.nutrition.eyebrow && <p class="text-h4">{c.nutrition.eyebrow}</p>}
+            <h2 class="text-h2 font-display">{c.nutrition.title}</h2>
+            <p>{c.nutrition.body}</p>
+          </div>
+          {c.nutrition.seals && (
+            <div class="panel__seals" aria-hidden="true">
+              {c.nutrition.seals.map((s) => <span class="text-body-sm">{s}</span>)}
+            </div>
+          )}
+        </article>
+        <article class="panel">
+          <img src={c.nutrition.imageRight} alt="" loading="lazy" />
+          <div class="panel__scrim"></div>
+          <ul class="panel__checks">
+            {c.nutrition.checks.map((line) => <li>{line}</li>)}
+          </ul>
+          <div class="panel__cta">
+            <a class="btn btn-glass" href={c.nutrition.cta.href}>{c.nutrition.cta.label}</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- BREAKOUT TILES (duo) -->
+    <section class="section duo section-gutter">
+      <div class="section-inner duo__grid">
+        <div class="duo__copy">
+          <p class="text-h4">{c.duo.eyebrow}</p>
+          <h2 class="text-h1 font-display">{c.duo.title}</h2>
+          <p class="text-body-sm">{c.duo.body}</p>
+        </div>
+        <a class="duo__tile" href={c.duo.cta1.href}>
+          <img src={c.duo.left} alt="" loading="lazy" />
+          <span>{c.duo.cta1.label}</span>
+        </a>
+        <a class="duo__tile" href={c.duo.cta2.href}>
+          <img src={c.duo.right} alt="" loading="lazy" />
+          <span>{c.duo.cta2.label}</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- CLOSING HERO (dark) -->
+    <section class="section hero hero--dark background-black">
+      <div class="hero__media"><img src={c.close.image} alt="" loading="lazy" /></div>
+      <div class="hero__scrim"></div>
+      <div class="hero__inner">
+        <div class="hero__copy">
+          <p class="text-h4">{c.close.eyebrow}</p>
+          <h2 class="text-h1 font-display text-balance">{c.close.title}</h2>
+          <a class="btn btn-glass" href={c.close.cta.href}>{c.close.cta.label}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="gc-footer">
+    <div class="gc-footer__cols">
+      {c.footer.cols.map((col) => (
+        <div>
+          <h3>{col.title}</h3>
+          <ul>
+            {col.links.map(([label, href]) => <li><a href={href}>{label}</a></li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <p class="gc-word">{c.footer.word}</p>
+    <div class="gc-marquee"><p>{marqueeText.repeat(8)}</p></div>
+    <p class="gc-copy">{c.footer.copy}</p>
+  </footer>
+  <ConceptSwitcher design={3} />
+</div>
+</body>
+</html>

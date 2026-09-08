@@ -1,0 +1,52 @@
+---
+import PlaceholderImage from "./PlaceholderImage.astro";
+import { homepage } from "../data/brunetta";
+import { big, feature } from "../data/photos";
+
+const { drinks } = homepage;
+---
+
+<section class="drinks flex min-h-[130vh] w-full flex-col md:flex-row">
+  <div
+    class="left_side biege sticky top-0 flex h-auto w-full flex-col justify-between bg-[var(--biege)] px-[1.75em] pb-[1.25em] pt-[1.5em] md:h-screen md:w-[45%]"
+  >
+    <div data-reveal>
+      <h3
+        class="max-w-[14ch] text-[4.25em] font-light uppercase leading-[0.9] tracking-[-0.03em] text-[var(--dark)]"
+        data-letters
+      >
+        {drinks.title}
+      </h3>
+      <p class="mt-[1em] max-w-[36ch] text-[1.05em] leading-[1.55] text-[var(--dark)]/80">
+        {drinks.subtitle}
+      </p>
+    </div>
+
+    <ul class="mt-[1.5em] flex-1">
+      {
+        drinks.items.map((item) => (
+          <li class="border-t border-[var(--dark)]/25 py-[0.85em] last:border-b">
+            <div class="flex items-baseline justify-between gap-3">
+              <span class="text-[1.05em] font-medium text-[var(--dark)]">{item.name}</span>
+            </div>
+            <p class="mt-[0.35em] max-w-[42ch] text-[0.92em] leading-[1.45] text-[var(--dark)]/70">
+              {item.detail}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a href={drinks.cta.href} class="btn-dark mt-[1em] self-start">{drinks.cta.label}</a>
+  </div>
+
+  <div class="right_side drinks flex w-full flex-col gap-[0.38em] p-[0.38em] md:w-[55%]">
+    {
+        drinks.imageLabels.map((label, i) => (
+        <div class="image_drinks h-[54em] overflow-hidden" data-parallax>
+          <PlaceholderImage src={big(i === 0 ? feature.wine : "DSC09509")} label={label} fill class="h-full w-full" />
+        </div>
+      ))
+    }
+  </div>
+</section>

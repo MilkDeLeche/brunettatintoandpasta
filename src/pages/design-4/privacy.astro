@@ -1,0 +1,50 @@
+---
+import Design4Layout from "../../layouts/Design4Layout.astro";
+import { business, contact } from "../../data/brunetta";
+---
+
+<Design4Layout
+  title={`Privacy Policy — ${business.name}`}
+  description={`How ${business.name} collects and uses information on this website.`}
+  path="/design-4/privacy"
+>
+  <section class="pc-page-head">
+    <div class="pc-wrap">
+      <p class="pc-eyebrow">Draft — pending review</p>
+      <h1 class="pc-title">Privacy <em>policy</em></h1>
+      <p class="pc-sub">Last updated: [date] — to be confirmed before launch.</p>
+    </div>
+  </section>
+
+  <section class="pc-block pc-wrap">
+    <div class="pc-prose">
+      <p>
+        {business.name} ("we," "us") operates this website. This policy explains what information
+        is collected when you visit and how it's used.
+      </p>
+      <h2>Information we collect</h2>
+      <p>
+        We do not require an account to browse this site. If you use the reservation button, you'll
+        be taken to Google's "Reserve with Google" service, which handles your booking information
+        under Google's own privacy policy. If a contact form is added, the information you submit is
+        sent to our team's inbox and is not sold or shared.
+      </p>
+      <h2>Third-party services</h2>
+      <ul>
+        <li>Google Maps — for the location / directions embed.</li>
+        <li>Google Reserve — for table reservations.</li>
+        <li>Google Fonts — delivers the fonts used on this site; your browser makes a request to their servers.</li>
+        <li>Analytics — [tool to be confirmed] measures aggregate site traffic.</li>
+      </ul>
+      <h2>This site was built with AI assistance</h2>
+      <p>
+        Portions of this website's design and content were produced with the help of AI tools. Menu,
+        hours, and business details reflect information provided by {business.name}.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy? Call us at <a href={`tel:${contact.phoneE164}`}>{contact.phone}</a>.
+      </p>
+    </div>
+  </section>
+</Design4Layout>

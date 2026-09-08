@@ -1,0 +1,61 @@
+---
+import Design3Layout from "../../layouts/Design3Layout.astro";
+import { business, location, hours, contact } from "../../data/brunetta";
+
+const address = `${business.name}, ${location.street}, ${location.city}, ${location.state} ${location.zip}`;
+const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+  `${location.street}, ${location.city}, ${location.state} ${location.zip}`
+)}`;
+const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+const RESERVE = "https://www.google.com/maps/reserve/v/dine/c/5H5kKRje0fU";
+---
+
+<Design3Layout
+  title={`Location & Hours — ${business.name}`}
+  description={`Find ${business.name} at ${location.street}, ${location.city}, ${location.state} ${location.zip}.`}
+  path="/design-3/location"
+>
+  <section class="page-head">
+    <p class="eyebrow">Visit Us</p>
+    <h1>Right in the heart of McAllen</h1>
+  </section>
+
+  <div class="page-body">
+    <div class="split">
+      <div class="content-stack">
+        <address class="content-stack" style="gap:0.25rem;font-style:normal">
+          <p class="text-h3 font-display">{location.street}</p>
+          <p class="text-h3 font-display">{location.city}, {location.state} {location.zip}</p>
+          <p class="text-body-sm" style="color:var(--color-gc-ink-soft);margin-top:0.5rem">{location.landmark}</p>
+        </address>
+
+        <div>
+          <p class="eyebrow">Hours</p>
+          <ul style="list-style:none;margin:0.75rem 0 0;padding:0;">
+            {hours.displayGrouped.map((row) => (
+              <li style="display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid rgba(0,0,0,0.12);padding:0.6rem 0;font-size:0.95rem;">
+                <span style="color:var(--color-gc-ink-soft)">{row.label}</span>
+                <span>{row.value}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="text-body-sm" style="color:var(--color-gc-muted);margin-top:0.6rem">{contact.largePartyNote}</p>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:0.75rem">
+          <a class="btn btn-black" href={RESERVE} target="_blank" rel="noopener">Reserve a table</a>
+          <a class="btn btn-line" href={directions} target="_blank" rel="noopener">Get directions</a>
+          <a class="btn btn-line" href={`tel:${contact.phoneE164}`}>{contact.phone}</a>
+        </div>
+      </div>
+
+      <iframe
+        class="d3-map"
+        title={`Map to ${business.name} in ${location.city}`}
+        src={mapSrc}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  </div>
+</Design3Layout>

@@ -1,0 +1,49 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import RevealHeadline from "../../components/RevealHeadline.astro";
+import PlaceholderImage from "../../components/PlaceholderImage.astro";
+import { about, business, nav } from "../../data/brunetta";
+import { big, feature } from "../../data/photos";
+---
+
+<Layout
+  title={`About Us — ${business.name}`}
+  description={about.short}
+  path="/design-1/about"
+>
+  <section class="bg-black px-5 py-20 text-cream md:px-8 md:py-28">
+    <div class="mx-auto max-w-3xl text-center">
+      <p data-reveal class="font-script text-2xl text-amber">Our Story</p>
+      <RevealHeadline
+        text={about.headline}
+        as="h1"
+        class="mx-auto mt-3 max-w-[16ch] text-balance text-4xl leading-[1.05] md:text-5xl"
+      />
+    </div>
+  </section>
+
+  <section class="bg-cream">
+    <div class="mx-auto grid max-w-5xl gap-12 px-5 py-20 md:grid-cols-[1fr_1.2fr] md:px-8 md:py-28">
+      <PlaceholderImage src={big(feature.wine)} label="Cheese and charcuterie at Brunetta" aspect="4/5" class="rounded-sm" />
+
+      <div data-reveal class="space-y-5 text-ink/80">
+        <p class="text-lg leading-relaxed">{about.storyVerbatim}</p>
+        <a href={nav.reserve.href} target="_blank" rel="noopener" class="btn-dark">{nav.reserve.label}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-black text-cream">
+    <div class="mx-auto max-w-5xl px-5 py-16 md:px-8">
+      <p data-reveal class="font-body text-xs uppercase tracking-[0.2em] text-cream/50">What we believe in</p>
+      <ul class="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+        {about.values.map((v) => (
+          <li data-reveal class="flex items-start gap-3 font-display text-lg">
+            <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber" />
+            {v}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>

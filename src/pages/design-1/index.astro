@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Hero from "../../components/Hero.astro";
+import VideoSpirit from "../../components/VideoSpirit.astro";
+import SignatureDishes from "../../components/SignatureDishes.astro";
+import WineProgram from "../../components/WineProgram.astro";
+import LocationCTA from "../../components/LocationCTA.astro";
+import StoryBand from "../../components/StoryBand.astro";
+import Testimonials from "../../components/Testimonials.astro";
+import { business } from "../../data/brunetta";
+---
+
+<Layout
+  title={`${business.name} — ${business.tagline}`}
+  description="Brunetta Tinto & Pasta — authentic Italian fine dining in McAllen, TX. Handmade pasta, wood-fired pizza, steak, seafood, and a cellar built for the plate. Reserve a table."
+  path="/design-1"
+>
+  <Hero />
+  <VideoSpirit />
+  <SignatureDishes />
+  <WineProgram />
+  <StoryBand />
+  <Testimonials />
+  <LocationCTA />
+</Layout>

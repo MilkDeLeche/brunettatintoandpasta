@@ -1,0 +1,83 @@
+---
+// Design 1 menu — same language as the homepage Signature Plates panel
+// (amber/ink rows, display section titles, price leaders). Not the Design 2
+// photo-card / order-tray menu.
+import Layout from "../../layouts/Layout.astro";
+import { menu, menuMeta, business, nav } from "../../data/brunetta";
+
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+---
+
+<Layout
+  title={`Menu — ${business.name}`}
+  description="The full Brunetta Tinto & Pasta menu — antipasti, salads, soups, house-made pasta, risotto, steak, seafood, wood-fired pizza, and dessert."
+  path="/design-1/menu"
+>
+  <section class="bg-[var(--biege)] text-[var(--dark)]">
+    <div class="mx-auto max-w-[75rem] px-[1.75em] pb-[1.5em] pt-[8em] text-center">
+      <p class="text-[0.85em] uppercase tracking-[2px]">La Carta</p>
+      <h1 class="mt-[0.35em] font-display text-[5.5em] font-light uppercase leading-[0.85] tracking-[-0.03em]" data-letters>
+        The Menu
+      </h1>
+      <p class="mx-auto mt-[1em] max-w-[42ch] text-[1.05em] leading-[1.55] text-[var(--dark)]/70">
+        Handmade pasta, wood-fired pizza, steak, and seafood — the dishes we cook in McAllen.
+      </p>
+    </div>
+
+    <nav
+      aria-label="Menu sections"
+      class="d1-menu-nav sticky top-[var(--brunetta-nav-height)] z-30 border-y border-[var(--dark)]/15 bg-[var(--biege)]/95 px-[1.75em] py-[0.9em] backdrop-blur"
+    >
+      <div class="mx-auto flex max-w-[75rem] flex-nowrap overflow-x-auto gap-x-[1.5em] gap-y-[0.5em]">
+        {menu.map((s) => (
+          <a href={`#${slugify(s.section)}`} class="shrink-0 py-2 text-[0.85em] uppercase tracking-[2px] hover:text-[var(--primary)]">
+            {s.section}
+          </a>
+        ))}
+      </div>
+    </nav>
+
+    {
+      menuMeta.needsProofing && (
+        <p class="mx-auto max-w-[70ch] px-[1.75em] pt-[1.5em] text-center text-[0.85em] leading-[1.45] text-[var(--dark)]/55">
+          Spellings are the kitchen’s current menu and are being proofed. {menuMeta.disclaimer}
+        </p>
+      )
+    }
+
+    <div class="mx-auto max-w-[75rem] px-[1.75em] pb-[4em] pt-[2em]">
+      {
+        menu.map((section) => (
+          <section id={slugify(section.section)} class="scroll-mt-44 py-[2.5em]">
+            <h2 class="font-display text-[3.5em] font-light uppercase leading-[0.9] tracking-[-0.03em]" data-letters>
+              {section.section}
+            </h2>
+            <ul class="mt-[1.25em] overflow-hidden rounded-[var(--radius-xs)] bg-[var(--primary)] text-[var(--dark)]">
+              {section.items.map((item) => (
+                <li class="border-t border-[var(--dark)] px-[1.25em] py-[0.9em] first:border-t-0">
+                  <div class="flex items-baseline justify-between gap-4 text-[1.15em]">
+                    <span class="font-medium">{item.name}</span>
+                    <span class="min-w-4 flex-1 border-b border-dotted border-current opacity-40" aria-hidden="true"></span>
+                    <span class="max-w-[12ch] shrink-0 text-right font-semibold">{item.price}</span>
+                  </div>
+                  {item.description && (
+                    <p class="mt-[0.35em] max-w-[62ch] text-[0.95em] leading-[1.45] text-[var(--dark)]/75">
+                      {item.description}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+
+      <div class="mt-[1em] flex flex-wrap items-center justify-between gap-4 border-t border-[var(--dark)]/15 pt-[2em]">
+        <p class="max-w-[48ch] text-[0.9em] text-[var(--dark)]/60">{menuMeta.disclaimer}</p>
+        <a href={nav.reserve.href} target="_blank" rel="noopener" class="btn-dark">
+          {nav.reserve.label}
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

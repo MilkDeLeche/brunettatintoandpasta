@@ -1,0 +1,28 @@
+---
+import PlaceholderImage from "./PlaceholderImage.astro";
+import { homepage } from "../data/brunetta";
+import { big, feature } from "../data/photos";
+
+const { rooted } = homepage;
+---
+
+<section class="fullsize_section relative h-[135vh] w-screen overflow-hidden">
+  <div class="absolute inset-0" data-parallax>
+    <PlaceholderImage src={big(feature.ambiance)} label={rooted.imageLabel} fill class="h-full w-full" />
+    <div class="absolute inset-0" style="background:linear-gradient(0deg, #191615ed, #19161522)"></div>
+  </div>
+
+  <div class="relative z-10 flex h-full flex-col justify-end px-[1.75em] py-[2.75em]">
+    <div class="max-w-[36rem]" data-reveal>
+      <h2
+        class="text-[5.5em] font-light uppercase leading-[0.85] tracking-[-0.03em] text-[var(--biege)]"
+        data-letters
+      >
+        {rooted.title}
+      </h2>
+      <p class="mt-[1em] max-w-[32.38rem] text-[1.05em] leading-[1.55] text-[var(--biege)]">
+        {rooted.body}
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,49 @@
+---
+import Design4Layout from "../../layouts/Design4Layout.astro";
+import { business, contact, location, hours } from "../../data/brunetta";
+
+const RESERVE = "https://www.google.com/maps/reserve/v/dine/c/5H5kKRje0fU";
+---
+
+<Design4Layout
+  title={`Contact — ${business.name}`}
+  description={`Call ${business.name} at ${contact.phone} or make a reservation online.`}
+  path="/design-4/contact"
+>
+  <section class="pc-page-head">
+    <div class="pc-wrap">
+      <p class="pc-eyebrow">Get In Touch</p>
+      <h1 class="pc-title">Contact <em>us</em></h1>
+      <p class="pc-sub">The quickest way to book is Reserve with Google; for parties of seven or more, please call.</p>
+    </div>
+  </section>
+
+  <section class="pc-block pc-wrap">
+    <div class="pc-info-grid">
+      <div class="pc-info-card">
+        <p class="pc-eyebrow">Phone</p>
+        <a class="big" href={`tel:${contact.phoneE164}`}>{contact.phone}</a>
+        <p class="pc-muted" style="margin-top:0.4rem;font-size:0.9rem">{contact.largePartyNote}</p>
+      </div>
+      <div class="pc-info-card">
+        <p class="pc-eyebrow">Address</p>
+        <p class="big">{location.street}</p>
+        <p class="big">{location.city}, {location.state} {location.zip}</p>
+      </div>
+      <div class="pc-info-card" style="grid-column:1/-1">
+        <p class="pc-eyebrow">Hours</p>
+        <ul style="list-style:none;margin:0.6rem 0 0;padding:0;">
+          {hours.displayGrouped.map((row) => (
+            <li style="display:flex;justify-content:space-between;gap:1rem;padding:0.35rem 0;">
+              <span class="pc-muted">{row.label}</span>
+              <span>{row.value}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:2rem">
+      <a class="pc-btn pc-btn--solid" href={RESERVE} target="_blank" rel="noopener">Make a reservation</a>
+    </div>
+  </section>
+</Design4Layout>

@@ -1,0 +1,664 @@
+---
+/**
+ * Design 2 — full mobile-first menu.
+ *
+ * Interaction pattern borrowed (not copied) from the client's "Agostino"
+ * project: menu items are photo + text cards, not a list; tapping one opens
+ * a detail view — a photo/panel split on desktop, a bottom sheet on mobile —
+ * with a cleanly-cropped 4:3 photo, the dish name, price and description, and
+ * "Add to order". Added dishes collect in an order tray that ends in
+ * "Show to waiter" (a local list only, no ordering backend).
+ *
+ * Visual language stays Design 2's own (Gusto Verde: paper/monochrome,
+ * Fraunces + Afacad). Native <dialog> + vanilla JS, no dependencies.
+ * The list persists locally across visits; stored entries are validated on load.
+ */
+import { menu, menuMeta } from "../../data/brunetta";
+import { photoForDish } from "../../data/photos";
+
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+const sections = menu.map((section) => ({
+  title: section.section,
+  id: slug(section.section),
+  items: section.items.map((item) => {
+    const p = photoForDish(item.name);
+    return { ...item, photo: p?.src, thumb: p?.thumb, photoAlt: p?.alt };
+  }),
+}));
+---
+
+<div class="d2menu">
+  <div class="d2menu__tools" data-menu-tools hidden>
+    <label class="d2menu__search">Search the menu
+      <span><input type="search" data-menu-search placeholder="Dish or ingredient" autocomplete="off" aria-controls="d2-menu-results" /><button type="button" data-search-clear aria-label="Clear menu search" hidden>×</button></span>
+    </label>
+    <label class="d2menu__jump">Jump to a section
+      <select data-menu-jump><option value="">Choose a category</option>{sections.map(section => <option value={section.id}>{section.title}</option>)}</select>
+    </label>
+  </div>
+  <p class="d2menu__status" data-menu-status role="status" aria-live="polite"></p>
+  <nav class="d2menu__chips" aria-label="Menu sections">
+    {sections.map((s) => (
+      <a href={`#${s.id}`} class="d2menu__chip" data-chip={s.id}>{s.title}</a>
+    ))}
+  </nav>
+
+  <p class="d2menu__note">{menuMeta.disclaimer}</p>
+
+  <div class="d2menu__body" id="d2-menu-results">
+    {sections.map((s) => (
+      <section class="d2menu__section" id={s.id}>
+        <h3 class="d2menu__section-title">{s.title}</h3>
+        <ul class="d2menu__grid">
+          {s.items.map((item) => (
+            <li>
+              <button
+                type="button"
+                class:list={["d2menu__card", !item.photo && "d2menu__card--text"]}
+                aria-haspopup="dialog"
+                data-dish={item.name}
+                data-section={s.title}
+                data-price={item.price}
+                data-desc={item.description}
+                data-photo={item.photo}
+                data-photo-alt={item.photoAlt}
+              >
+                <span class="d2menu__card-text">
+                  <span class="d2menu__card-name">{item.name}</span>
+                  <span class="d2menu__card-desc">{item.description}</span>
+                  <span class="d2menu__card-price">{item.price}</span>
+                </span>
+                {item.thumb && <span class="d2menu__card-media">
+                  <img src={item.thumb} alt="" loading="lazy" width="200" height="150" />
+                </span>}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+  <div class="d2menu__empty" data-search-empty hidden><p>No dishes found. Try another name or ingredient.</p><button type="button" data-search-reset>Show full menu</button></div>
+
+  <!-- floating order pill -->
+  <button type="button" class="d2menu__pill" data-open-tray hidden>
+    View order <span data-pill-count>0</span>
+  </button>
+
+  <!-- dish detail: desktop = split, mobile = bottom sheet -->
+  <dialog class="d2menu__sheet" data-dish-dialog aria-labelledby="d2-dish-name">
+    <button type="button" class="d2menu__x" data-close aria-label="Close">&times;</button>
+    <div class="d2menu__grabber" aria-hidden="true"></div>
+    <figure class="d2menu__sheet-media">
+      <img data-d-photo alt="" />
+    </figure>
+    <div class="d2menu__sheet-panel">
+      <p class="d2menu__sheet-eyebrow" data-d-section></p>
+      <h4 class="d2menu__sheet-name" id="d2-dish-name" data-d-name></h4>
+      <p class="d2menu__sheet-price" data-d-price></p>
+      <p class="d2menu__sheet-desc" data-d-desc></p>
+      <label class="d2menu__portion" data-portion-wrap hidden>Choose a size<select data-portion aria-label="Choose a size"></select></label>
+      <button type="button" class="d2menu__btn" data-add-current>Add to order</button>
+      <p class="d2menu__fineprint">Prices indicative — confirm with your server. Menu subject to change.</p>
+    </div>
+  </dialog>
+
+  <!-- order tray -->
+  <dialog class="d2menu__sheet d2menu__sheet--tray" data-tray-dialog aria-label="Your order">
+    <button type="button" class="d2menu__x" data-close aria-label="Close">&times;</button>
+    <div class="d2menu__grabber" aria-hidden="true"></div>
+    <div class="d2menu__sheet-panel">
+      <div data-tray-view>
+        <h4 class="d2menu__sheet-name">Your order</h4>
+        <p class="d2menu__fineprint">A list to share with your server. Nothing is sent to the kitchen.</p>
+        <p data-tray-empty hidden>Your list is empty. Choose a dish from the menu to get started.</p>
+        <ul class="d2menu__tray-list" data-tray-list></ul>
+        <p class="d2menu__tray-subtotal">Indicative total <span data-tray-total>$0</span></p>
+        <button type="button" class="d2menu__btn" data-show-waiter>Show to waiter</button>
+        <button type="button" class="d2menu__clear" data-clear>Clear order</button>
+      </div>
+      <div data-waiter-view hidden>
+        <p class="d2menu__sheet-eyebrow">Table order</p>
+        <ul class="d2menu__waiter-list" data-waiter-list></ul>
+        <button type="button" class="d2menu__btn d2menu__btn--ghost" data-back-tray>Back</button>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<style>
+  .d2menu { position: relative; --menu-muted: #62605b; }
+  .d2menu :global([hidden]), .d2menu dialog:not([open]) { display: none !important; }
+  .d2menu__tools { display: flex; align-items: end; gap: 24px; margin-bottom: 16px; }
+  .d2menu__tools label { display: grid; gap: 8px; font-size: 16px; color: var(--gv-black); }
+  .d2menu__search { flex: 1; }
+  .d2menu__search > span { display: flex; position: relative; }
+  .d2menu__tools input, .d2menu__tools select { width: 100%; min-height: 48px; font: inherit; font-size: 17px; border: 1px solid var(--gv-black); border-radius: 4px; background: var(--gv-white); color: var(--gv-black); padding: 12px 44px 12px 14px; }
+  .d2menu__tools input::placeholder { color: var(--menu-muted); opacity: 1; }
+  .d2menu__tools input::-webkit-search-cancel-button { display: none; }
+  .d2menu__search button { position: absolute; right: 2px; top: 2px; width: 44px; height: 44px; font-size: 24px; background: transparent; border: 0; color: var(--gv-black); cursor: pointer; }
+  .d2menu__jump { width: 280px; }
+  .d2menu__status { font-size: 15px; color: var(--menu-muted); margin: 0 0 12px; min-height: 24px; }
+  .d2menu__empty { text-align: center; padding: 32px 16px; }
+  .d2menu__empty button { font: inherit; padding: 12px 20px; color: var(--gv-white); background: var(--gv-black); border: 0; cursor: pointer; border-radius: 4px; }
+  @media(max-width: 600px) { .d2menu__tools { flex-direction: column; align-items: stretch; gap: 16px; } .d2menu__jump { width: 100%; } }
+  .d2menu :global(:is(a, button, select):focus-visible) { outline: 2px solid var(--gv-black); outline-offset: 4px; }
+  .d2menu__portion { display: grid; gap: 8px; margin-bottom: 20px; }
+  .d2menu__portion select { font: inherit; padding: 12px; width: 100%; border: 1px solid #777; background: var(--gv-white); color: var(--gv-black); }
+
+  /* ---- sticky category bar ---- */
+  .d2menu__chips {
+    position: sticky;
+    top: var(--d2-nav-height, 5.5rem);
+    z-index: 20;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.75rem 2px;
+    margin-bottom: 1.5rem;
+    background: #f4f2ee;
+    scrollbar-width: none;
+  }
+  .d2menu__chips::-webkit-scrollbar { display: none; }
+  .d2menu__chip {
+    flex: 0 0 auto;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--gv-black-10);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--menu-muted);
+  }
+  .d2menu__chip.is-active { color: var(--gv-white); background: var(--gv-black); border-color: var(--gv-black); }
+
+  .d2menu__note {
+    font-size: 0.85rem;
+    color: var(--menu-muted);
+    text-align: center;
+    margin: 0 0 1.5rem;
+  }
+
+  /* ---- section + card grid ---- */
+  .d2menu .d2menu__section { scroll-margin-top: calc(var(--d2-nav-height, 5.5rem) + 5rem); padding-top: 2rem; }
+  .d2menu__section-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 300;
+    font-size: 2rem;
+    margin: 0 0 1.25rem;
+  }
+  .d2menu__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .d2menu__card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7rem;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+    min-height: 7.5rem;
+    padding: 0;
+    background: var(--gv-white);
+    border: 1px solid var(--gv-black-10);
+    border-radius: 6px;
+    overflow: hidden;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    transition: border-color 160ms ease, transform 160ms ease;
+  }
+  .d2menu__card:hover { border-color: var(--gv-black-30); }
+  .d2menu__card--text { grid-template-columns: minmax(0, 1fr); }
+  .d2menu__card:active { transform: scale(0.99); }
+
+  .d2menu__card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem 1.1rem;
+    min-width: 0;
+  }
+  .d2menu__card-name {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 400;
+    font-size: 1.15rem;
+    line-height: 1.25;
+  }
+  .d2menu__card-desc {
+    font-size: 0.88rem;
+    color: var(--menu-muted);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .d2menu__card-price {
+    margin-top: auto;
+    padding-top: 0.35rem;
+    font-size: 0.98rem;
+    font-weight: 500;
+  }
+  .d2menu__card-media { position: relative; background: var(--gv-black-05); }
+  .d2menu__card-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 620px) {
+    .d2menu__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  }
+  @media (min-width: 1024px) {
+    .d2menu__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  /* ---- dish / tray sheet ---- */
+  .d2menu__sheet {
+    padding: 0;
+    border: 0;
+    background: var(--gv-white);
+    color: var(--gv-black);
+    box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.25);
+  }
+  .d2menu__sheet::backdrop { background: rgba(0, 0, 0, 0.5); }
+  .d2menu__x {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    z-index: 3;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.92);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .d2menu__grabber {
+    touch-action: none;
+    display: none;
+    width: 2.5rem;
+    height: 0.25rem;
+    margin: 0.6rem auto 0;
+    border-radius: 999px;
+    background: var(--gv-line-soft, #c7c3b8);
+  }
+  .d2menu__sheet-media { margin: 0; background: var(--gv-black-05); }
+  .d2menu__sheet-media img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .d2menu__sheet-panel { padding: 1.5rem; }
+  .d2menu__sheet-eyebrow {
+    margin: 0 0 0.4rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--menu-muted);
+  }
+  .d2menu__sheet-name {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 300;
+    font-size: 1.9rem;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .d2menu__sheet-price { margin: 0.6rem 0 0; font-size: 1.15rem; font-weight: 500; }
+  .d2menu__sheet-desc { margin: 0.9rem 0 1.5rem; color: var(--menu-muted); line-height: 1.6; }
+
+  .d2menu__btn {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    background: var(--gv-black);
+    color: var(--gv-white);
+    border: 1px solid var(--gv-black);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .d2menu__btn:disabled { opacity: .5; cursor: default; }
+  .d2menu__btn + .d2menu__btn { margin-top: 0.6rem; }
+  .d2menu__btn--ghost {
+    background: none;
+    color: var(--menu-muted);
+    border-color: var(--gv-black-10);
+  }
+  .d2menu__btn--ghost:disabled { cursor: not-allowed; }
+  .d2menu__fineprint { font-size: 0.75rem; color: var(--menu-muted); margin: 0.9rem 0 0; }
+
+  /* MOBILE: bottom sheet */
+  @media (max-width: 759px) {
+    .d2menu__sheet {
+      width: 100%;
+      max-width: 100%;
+      max-height: 90dvh;
+      margin: 0;
+      position: fixed;
+      inset: auto 0 0 0;
+      border-radius: 18px 18px 0 0;
+      overflow: hidden auto;
+    }
+    .d2menu__grabber { display: block; }
+    .d2menu__sheet-media img { aspect-ratio: 4 / 3; }
+    @media (prefers-reduced-motion: no-preference) {
+      .d2menu__sheet[open] { animation: d2menu-sheet-up 260ms cubic-bezier(0.16, 1, 0.3, 1); }
+    }
+  }
+  @keyframes d2menu-sheet-up { from { transform: translateY(100%); } }
+
+  /* DESKTOP: centred photo/panel split */
+  @media (min-width: 760px) {
+    .d2menu__sheet {
+      width: min(52rem, 92vw);
+      max-height: 88vh;
+      border-radius: 8px;
+      overflow: auto;
+      grid-template-columns: 1fr 1fr;
+    }
+    .d2menu__sheet[open] { display: grid; }
+    .d2menu__sheet--no-photo { grid-template-columns: 1fr; width: min(34rem, 92vw); }
+    .d2menu__sheet--tray { grid-template-columns: 1fr; width: min(30rem, 92vw); }
+    .d2menu__sheet-media { height: 100%; }
+    .d2menu__sheet-media img { height: 100%; aspect-ratio: auto; }
+    .d2menu__sheet-panel {
+      padding: 2.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: safe center;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .d2menu__sheet[open] { animation: d2menu-pop 200ms cubic-bezier(0.16, 1, 0.3, 1); }
+    }
+  }
+  @keyframes d2menu-pop { from { opacity: 0; transform: translateY(10px); } }
+
+  /* ---- order pill + tray ---- */
+  .d2menu__pill {
+    position: fixed;
+    left: 50%;
+    bottom: 1.25rem;
+    transform: translateX(-50%);
+    z-index: 30;
+    padding: 0.8rem 1.5rem;
+    background: var(--gv-black);
+    color: var(--gv-white);
+    border: 0;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  }
+  .d2menu__pill span {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    margin-left: 0.45rem;
+    padding: 0 0.35rem;
+    background: var(--gv-white);
+    color: var(--gv-black);
+    border-radius: 999px;
+    font-size: 0.75rem;
+  }
+  .d2menu__tray-list,
+  .d2menu__waiter-list { list-style: none; margin: 0 0 1rem; padding: 0; }
+  .d2menu__tray-list :global(li) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--gv-black-10);
+  }
+  .d2menu__tray-list :global(li > span:first-child) { grid-column: 1 / -1; line-height: 1.4; }
+  .d2menu :global(.d2menu__qty) { display: flex; align-items: center; gap: 0.5rem; }
+  .d2menu :global(.d2menu__qty button) {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--gv-black-10);
+    border-radius: 999px;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+  }
+  .d2menu__waiter-list :global(li) {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--gv-black-10);
+    font-size: 1.3rem;
+  }
+  .d2menu__tray-subtotal { font-size: 0.95rem; color: var(--menu-muted); margin: 0.5rem 0 1.25rem; }
+  .d2menu__tray-subtotal span { color: var(--gv-black); font-weight: 500; }
+  .d2menu__clear {
+    display: block;
+    margin: 1rem auto 0;
+    background: none;
+    border: 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--menu-muted);
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  import { priceOptions, priceCents, restoreSelection, type SelectionItem, type PriceOption } from "../../lib/menu-selection";
+  const KEY = "brunetta-d2-order";
+  const $ = <T extends Element>(s: string, r: ParentNode = document) => r.querySelector<T>(s)!;
+  const $$ = <T extends Element>(s: string, r: ParentNode = document) => Array.from(r.querySelectorAll<T>(s));
+  const root = $(".d2menu");
+  if (root) {
+    const dishDialog = $<HTMLDialogElement>("[data-dish-dialog]", root);
+    const trayDialog = $<HTMLDialogElement>("[data-tray-dialog]", root);
+    const pill = $<HTMLButtonElement>("[data-open-tray]", root);
+    const cards = $$<HTMLButtonElement>("[data-dish]", root);
+    const portion = $<HTMLSelectElement>("[data-portion]", root);
+    const showWaiter = $<HTMLButtonElement>("[data-show-waiter]", root);
+    const catalog = new Map<string, string>();
+    const optionName = (name: string, option: PriceOption) => option.label ? `${name} (${option.label})` : name;
+    cards.forEach(card => priceOptions(card.dataset.price!).forEach(option => catalog.set(optionName(card.dataset.dish!, option), option.price)));
+    let order: SelectionItem[] = [];
+    try { order = restoreSelection(localStorage.getItem(KEY), catalog); } catch { /* Storage can be unavailable. */ }
+    const money = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
+    const renderTray = () => {
+      const list = $("[data-tray-list]", trayDialog);
+      list.replaceChildren();
+      let sum = 0;
+      for (const item of order) {
+        sum += priceCents(item.price) * item.qty;
+        const li = document.createElement("li");
+        const label = document.createElement("span"); label.textContent = item.name;
+        const qty = document.createElement("span"); qty.className = "d2menu__qty";
+        const value = document.createElement("span"); value.textContent = String(item.qty);
+        const adjust = (delta: number) => {
+          const btn = document.createElement("button"); btn.type = "button";
+          btn.textContent = delta < 0 ? "−" : "+";
+          btn.setAttribute("aria-label", `${delta < 0 ? "Decrease" : "Increase"} ${item.name}`);
+          btn.disabled = delta > 0 && item.qty >= 99;
+          btn.addEventListener("click", () => {
+            const focusLabel = btn.getAttribute("aria-label");
+            item.qty += delta;
+            order = order.filter(entry => entry.qty > 0);
+            sync();
+            const replacement = $$<HTMLButtonElement>("button", list).find(b => b.getAttribute("aria-label") === focusLabel && !b.disabled);
+            (replacement ?? $<HTMLButtonElement>("button", list) ?? $<HTMLButtonElement>("[data-clear]", trayDialog)).focus();
+          });
+          return btn;
+        };
+        qty.append(adjust(-1), value, adjust(1));
+        const price = document.createElement("span"); price.textContent = money(priceCents(item.price) * item.qty);
+        li.append(label, qty, price); list.append(li);
+      }
+      $("[data-tray-total]", trayDialog).textContent = money(sum);
+      $<HTMLElement>("[data-tray-empty]", trayDialog).hidden = order.length > 0;
+      showWaiter.disabled = order.length === 0;
+    };
+    const sync = () => {
+      try { localStorage.setItem(KEY, JSON.stringify(order)); } catch { /* In-memory list still works. */ }
+      const count = order.reduce((total, item) => total + item.qty, 0);
+      pill.hidden = count === 0;
+      $("[data-pill-count]", pill).textContent = String(count);
+      pill.setAttribute("aria-label", `View order, ${count} ${count === 1 ? "dish" : "dishes"}`);
+      renderTray();
+    };
+    let opener: HTMLElement | null = null;
+    let previousOverflow = "";
+    const openDialog = (dialog: HTMLDialogElement, trigger: HTMLElement) => {
+      opener = trigger; previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      dialog.showModal();
+    };
+    let current: { name: string; options: PriceOption[] } | null = null;
+    cards.forEach(card => card.addEventListener("click", () => {
+      current = { name: card.dataset.dish!, options: priceOptions(card.dataset.price!) };
+      const photo = $<HTMLImageElement>("[data-d-photo]", dishDialog);
+      const hasPhoto = Boolean(card.dataset.photo);
+      dishDialog.classList.toggle("d2menu__sheet--no-photo", !hasPhoto);
+      $<HTMLElement>(".d2menu__sheet-media", dishDialog).hidden = !hasPhoto;
+      if (hasPhoto) { photo.src = card.dataset.photo!; photo.alt = card.dataset.photoAlt ?? ""; }
+      else { photo.removeAttribute("src"); photo.alt = ""; }
+      $("[data-d-section]", dishDialog).textContent = card.dataset.section!;
+      $("[data-d-name]", dishDialog).textContent = card.dataset.dish!;
+      $("[data-d-price]", dishDialog).textContent = card.dataset.price!;
+      $("[data-d-desc]", dishDialog).textContent = card.dataset.desc!;
+      portion.replaceChildren(...current.options.map((option, index) => new Option(`${option.label} ${option.price}`.trim(), String(index))));
+      $<HTMLElement>("[data-portion-wrap]", dishDialog).hidden = current.options.length < 2;
+      $<HTMLButtonElement>("[data-add-current]", dishDialog).disabled = current.options.length === 0;
+      openDialog(dishDialog, card);
+    }));
+    $("[data-add-current]", dishDialog).addEventListener("click", () => {
+      if (!current) return;
+      const option = current.options[Number(portion.value)];
+      if (!option) return;
+      const name = optionName(current.name, option);
+      const existing = order.find(item => item.name === name);
+      if (existing) existing.qty = Math.min(99, existing.qty + 1);
+      else order.push({ name, price: option.price, qty: 1 });
+      sync(); dishDialog.close();
+    });
+    const setWaiterView = (show: boolean) => {
+      $<HTMLElement>("[data-tray-view]", trayDialog).hidden = show;
+      $<HTMLElement>("[data-waiter-view]", trayDialog).hidden = !show;
+    };
+    pill.addEventListener("click", () => { setWaiterView(false); renderTray(); openDialog(trayDialog, pill); });
+    showWaiter.addEventListener("click", () => {
+      const list = $("[data-waiter-list]", trayDialog); list.replaceChildren();
+      order.forEach(item => {
+        const li = document.createElement("li");
+        const name = document.createElement("span"); name.textContent = item.name;
+        const qty = document.createElement("span"); qty.textContent = `×${item.qty}`;
+        li.append(name, qty); list.append(li);
+      });
+      setWaiterView(true); $<HTMLButtonElement>("[data-back-tray]", trayDialog).focus();
+    });
+    $("[data-back-tray]", trayDialog).addEventListener("click", () => { setWaiterView(false); showWaiter.focus(); });
+    $("[data-clear]", trayDialog).addEventListener("click", () => { order = []; sync(); trayDialog.close(); });
+    $$("[data-close]", root).forEach(button => button.addEventListener("click", () => button.closest("dialog")?.close()));
+    [dishDialog, trayDialog].forEach(dialog => {
+      dialog.addEventListener("close", () => {
+        document.body.style.overflow = previousOverflow;
+        if (opener && !opener.hidden) opener.focus(); else cards[0]?.focus();
+      });
+      let backdropDown = false;
+      dialog.addEventListener("pointerdown", event => { backdropDown = event.target === dialog; });
+      dialog.addEventListener("click", event => {
+        if (!backdropDown || event.target !== dialog) return;
+        const box = dialog.getBoundingClientRect();
+        if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.close();
+      });
+    });
+    // Dragging a handle alone dismisses the sheet, never scrolling dish content.
+    $$<HTMLElement>(".d2menu__grabber", root).forEach(handle => {
+      let startY: number | null = null;
+      handle.addEventListener("pointerdown", event => { startY = event.clientY; handle.setPointerCapture(event.pointerId); });
+      handle.addEventListener("pointerup", event => { if (startY !== null && event.clientY - startY > 65) handle.closest("dialog")?.close(); startY = null; });
+      handle.addEventListener("pointercancel", () => { startY = null; });
+    });
+    const chips = $$<HTMLAnchorElement>("[data-chip]", root);
+    const chipBar = $<HTMLElement>(".d2menu__chips", root);
+    const sections = $$<HTMLElement>(".d2menu__section", root);
+    const nav = document.querySelector<HTMLElement>(".gv-nav");
+    let navHeight = 88;
+    if (nav) new ResizeObserver(() => {
+      navHeight = nav.getBoundingClientRect().bottom;
+      root.style.setProperty("--d2-nav-height", `${navHeight}px`);
+    }).observe(nav);
+    const search = $<HTMLInputElement>("[data-menu-search]", root);
+    const jump = $<HTMLSelectElement>("[data-menu-jump]", root);
+    const clearSearchButton = $<HTMLButtonElement>("[data-search-clear]", root);
+    const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const applySearch = () => {
+      const query = normalize(search.value.trim());
+      let found = 0;
+      cards.forEach(card => {
+        const match = normalize(`${card.dataset.dish} ${card.dataset.desc}`).includes(query);
+        card.closest("li")!.hidden = !match;
+        if (match) found += 1;
+      });
+      sections.forEach(section => { section.hidden = !Array.from(section.querySelectorAll("li")).some(item => !item.hidden); });
+      chipBar.hidden = Boolean(query);
+      $<HTMLElement>(".d2menu__jump", root).hidden = Boolean(query);
+      clearSearchButton.hidden = !search.value;
+      $<HTMLElement>("[data-search-empty]", root).hidden = found > 0;
+      $("[data-menu-status]", root).textContent = `${found} ${found === 1 ? "dish" : "dishes"}${query ? " found" : " on the menu"}`;
+    };
+    const clearSearch = () => { search.value = ""; applySearch(); search.focus(); };
+    search.addEventListener("input", applySearch);
+    clearSearchButton.addEventListener("click", clearSearch);
+    $("[data-search-reset]", root).addEventListener("click", clearSearch);
+    jump.addEventListener("change", () => {
+      const target = sections.find(section => section.id === jump.value);
+      if (target) {
+        location.hash = target.id;
+        const heading = target.querySelector("h3")!;
+        heading.tabIndex = -1; heading.focus({ preventScroll: true });
+      }
+    });
+    $<HTMLElement>("[data-menu-tools]", root).hidden = false;
+    applySearch();
+    let queued = false;
+    const updateCategory = () => {
+      queued = false;
+      if (search.value.trim()) return;
+      const current = sections.filter(section => section.getBoundingClientRect().top <= navHeight + 100).at(-1) ?? sections[0];
+      jump.value = current.id;
+      chips.forEach(chip => {
+        const active = chip.dataset.chip === current.id;
+        const wasActive = chip.classList.contains("is-active");
+        chip.classList.toggle("is-active", active);
+        if (active) chip.setAttribute("aria-current", "location"); else chip.removeAttribute("aria-current");
+        if (active && !wasActive) {
+          const offset = chip.offsetLeft - chipBar.clientWidth / 2 + chip.offsetWidth / 2;
+          chipBar.scrollTo({ left: offset, behavior: "instant" });
+        }
+      });
+    };
+    window.addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(updateCategory); } }, { passive: true });
+    updateCategory(); sync();
+  }
+</script>

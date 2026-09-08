@@ -1,0 +1,33 @@
+---
+import { nav, business } from "../data/brunetta";
+const { pathname } = Astro.url;
+---
+<header class="site-header" data-header>
+  <div class="brunetta-nav">
+    <a href="/design-1" class="brunetta-wordmark" aria-label={business.name}>
+      <span>{business.shortName}</span><small>Tinto &amp; Pasta</small>
+    </a>
+    <nav class="brunetta-nav__links" aria-label="Primary">
+      {nav.primary.map(item => <a href={item.href} aria-current={pathname === item.href ? "page" : undefined}>{item.label}</a>)}
+      <a href={nav.menu.href} aria-current={pathname === nav.menu.href ? "page" : undefined}>Menu</a>
+    </nav>
+    <a href={nav.reserve.href} target="_blank" rel="noopener" class="btn-reserve brunetta-nav__reserve">{nav.reserve.label}<span aria-hidden="true">↗</span></a>
+    <details class="brunetta-nav__mobile">
+      <summary aria-label="Open navigation"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span>Explore</span></summary>
+      <nav aria-label="Mobile navigation">
+        {nav.primary.map(item => <a href={item.href} aria-current={pathname === item.href ? "page" : undefined}>{item.label}</a>)}
+        <a href={nav.menu.href}>View Menu</a>
+        <a href={nav.reserve.href} target="_blank" rel="noopener">{nav.reserve.label} ↗</a>
+      </nav>
+    </details>
+  </div>
+</header>
+<script>
+  const mobile = document.querySelector<HTMLDetailsElement>(".brunetta-nav__mobile");
+  mobile?.addEventListener("keydown", event => {
+    if (event.key === "Escape") { mobile.open = false; mobile.querySelector("summary")?.focus(); }
+  });
+  document.addEventListener("click", event => {
+    if (mobile?.open && event.target instanceof Node && !mobile.contains(event.target)) mobile.open = false;
+  });
+</script>

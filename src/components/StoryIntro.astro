@@ -1,0 +1,31 @@
+---
+import RevealHeadline from "./RevealHeadline.astro";
+import PlaceholderImage from "./PlaceholderImage.astro";
+---
+
+<section class="bg-cream">
+  <div class="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center md:gap-16 md:px-8 md:py-28">
+    <div data-reveal>
+      <p class="font-script text-2xl text-amber-deep">The heart of Italian dining</p>
+      <RevealHeadline
+        text="Thirteen years of handmade pasta, slow sauces, and a table that feels like family."
+        as="h2"
+        class="mt-3 text-4xl leading-[1.05] md:text-5xl"
+      />
+      <p class="mt-6 max-w-lg text-ink/80">
+        From the moment you step through our doors, you'll feel the warmth of our welcoming
+        atmosphere. Fine dining doesn't have to be stuffy — it should be elegant and comfortable,
+        a place to relax and truly savor your meal.
+      </p>
+      <a href="/design-1/about" class="mt-6 inline-block font-body text-sm font-semibold uppercase tracking-[0.12em] text-amber-deep hover:text-amber">
+        Our story &rarr;
+      </a>
+    </div>
+
+    <PlaceholderImage
+      label="Signature dish — plated, dark background"
+      aspect="4/5"
+      class="rounded-sm"
+    />
+  </div>
+</section>
