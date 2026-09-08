@@ -36,5 +36,10 @@ export default defineConfig({
   site: "https://brunettatintoandpasta-ev25.vercel.app",
   adapter: vercel(),
   integrations,
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+    // Keep the dev file-watcher off the generated build output — scanning
+    // .vercel/output on every rebuild was exhausting file handles (ENOMEM).
+    server: { watch: { ignored: ["**/.vercel/**", "**/dist/**", "**/.astro/**"] } },
+  },
 });
