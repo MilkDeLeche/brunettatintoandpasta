@@ -92,4 +92,8 @@ const dishes = signature.dishNames
     .signature-photo__intro h3 { font-size: 38px; }
     .signature-photo__intro p { font-size: 15px; }
   }
+  /* Mobile: keep only the captioned photo (the one carrying the heading + button). */
+  @media (max-width: 767px) {
+    .signature-photos .signature-photo:not(:first-child) { display: none; }
+  }
 </style>

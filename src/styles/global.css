@@ -401,5 +401,7 @@
   .featured_menu .right_side > div:first-child { padding: 32px 24px 0; }
   .drinks > .left_side { min-height: 0; padding: 40px 24px; }
   .drinks > .right_side .image_drinks { min-height: 360px; }
+  /* Mobile: the drinks list stands on its own — drop the paired photos. */
+  .drinks > .right_side { display: none; }
   .fullsize_section { min-height: 600px; }
 }
